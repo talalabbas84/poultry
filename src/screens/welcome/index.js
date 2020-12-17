@@ -42,7 +42,12 @@ class Home extends React.Component {
 
         <View style={AppStyles.bottomView}>
           <Text style={AppStyles.smallText}>Already Have an account?</Text>
-          <Button title="LOGIN" />
+          <Button
+            title="LOGIN"
+            onPress={() => {
+              this.props.navigation.navigate('Login');
+            }}
+          />
         </View>
       </View>
     );

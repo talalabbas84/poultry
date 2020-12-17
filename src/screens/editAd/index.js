@@ -7,6 +7,7 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  Title,
 } from 'react-native';
 import Header from '../../components/header';
 import CustomTextInput from '../../components/textInput';
@@ -26,33 +27,27 @@ import {Card} from 'native-base';
 import AppStyles from '../../appStyles/styles';
 class EditAd extends React.Component {
   state = {
-    from: '',
-
-    showWeight: true,
-    showType: true,
-    showRate: true,
-    showLess: true,
-    showAddress: true,
-    showCity: true,
-    showPhone: true,
-    showGrade: true,
-    selectedNasal: '',
-    selectedCity: '',
+    weight: -1,
+    rate: -1,
+    lessOnCash: -1,
+    address: '',
+    number: -1,
+    location: '',
   };
 
+  constructor(props) {
+    super(props);
+    this.setState({
+      weight: props.weight,
+      rate: props.rate,
+      lessOnCash: props.lessOnCash,
+      address: props.address,
+      number: props.number,
+      location: props.location,
+    });
+  }
+
   render() {
-    const {
-      showWeight,
-      showType,
-      showRate,
-      showLess,
-      showAddress,
-      showCity,
-      showPhone,
-      showGrade,
-      selectedNasal,
-      selectedCity,
-    } = this.state;
     return (
       <View>
         <Header
@@ -61,16 +56,44 @@ class EditAd extends React.Component {
           title="اشتھارات ترمیم"
         />
 
-        {/* weight, type rate, less on cash , address, city  */}
+        <ScrollView>
+          {/* weight, type rate, less on cash , address, city  */}
+          <Text style={styles.title}>Edit Ad</Text>
 
-        <CustomTextInput
-          length={5}
-          keyboardType="numeric"
-          image={circle}
-          placeholder=""
-        />
+          <View style={styles.border} />
 
-        <Text>Hi i am edit screen </Text>
+          <Text style={styles.header}> Weight </Text>
+
+          <CustomTextInput length={5} image={circle} placeholder="Weight" />
+
+          <Text style={styles.header}> Type Rate </Text>
+          <CustomTextInput length={5} image={circle} placeholder="Type Rate" />
+          <Text style={styles.header}> Less on cash </Text>
+
+          <CustomTextInput
+            length={5}
+            image={circle}
+            placeholder="Less on cash"
+          />
+
+          <Text style={styles.header}> Address </Text>
+
+          <CustomTextInput length={5} image={circle} placeholder="Address" />
+
+          <Text style={styles.header}> Phone Number </Text>
+
+          <CustomTextInput length={5} image={circle} placeholder="Number" />
+
+          <Text style={styles.header}> Location </Text>
+
+          <CustomTextInput length={5} image={circle} placeholder="Location" />
+
+          <View style={{marginBottom: 50, marginTop: 20}}>
+            <Button red style={styles.button} title="ترمیم" />
+          </View>
+
+          <View style={{margin: 10}} />
+        </ScrollView>
       </View>
     );
   }
@@ -92,5 +115,28 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  title: {
+    fontSize: 24,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    padding: 10,
+  },
+
+  border: {
+    borderBottomColor: '#181818',
+    borderBottomWidth: 0.5,
+  },
+
+  header: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold',
+    padding: 10,
+  },
+
+  button: {
+    color: 'green',
   },
 });
