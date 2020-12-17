@@ -39,7 +39,11 @@ class Home extends React.Component {
     ],
   };
 
-  navigateToEdit = (id) => {};
+  navigateToEdit = (id) => {
+    console.log(id);
+
+    this.props.navigation.navigate('EditAd', {id});
+  };
 
   renderItem = ({item, index}) => {
     return (

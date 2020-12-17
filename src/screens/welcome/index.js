@@ -14,13 +14,8 @@ class Home extends React.Component {
   onSignUp = (number) => {
     // number not -1
     if (number !== -1) {
-      console.log(number);
+      this.props.navigation.navigate('Signup', {number});
     }
-
-    // implement the call
-
-    // navigate to drawer stack
-    // this.props.navigation.navigate('DrawerStack');
   };
 
   render() {
