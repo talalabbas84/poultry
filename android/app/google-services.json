@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1047006200482",
+    "project_id": "pakpoultry-c0fe2",
+    "storage_bucket": "pakpoultry-c0fe2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1047006200482:android:4af80fe40112ab11818dfb",
+        "android_client_info": {
+          "package_name": "com.billiard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1047006200482-7b4jku0ahffen6ar4bmg99mfek7g0kau.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFn8EUAU3OQIlm5wwSdyGORudqQj0DYXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1047006200482-7b4jku0ahffen6ar4bmg99mfek7g0kau.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
