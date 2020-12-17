@@ -5,9 +5,9 @@ import {View, Text} from 'react-native';
 // import ReduxThunk from 'redux-thunk';
 import reducers from './src/container/reducers';
 import Navigation from './src/routes';
-import {Provider} from 'react-redux';
-import {PersistGate} from 'redux-persist/src/integration/react';
-import {store, persister} from './src/redux/store';
+// import {Provider} from 'react-redux';
+// import {PersistGate} from 'redux-persist/src/integration/react';
+// import {store, persister} from './src/redux/store';
 
 //const store = createStore(reducers , {} , applyMiddleware(ReduxThunk)) ;
 // var firebaseConfig = {
@@ -26,11 +26,11 @@ const App = () => {
     // <Provider store={store}>
     //  <Navigation/>
     // </Provider>
-    <Provider store={store}>
-      <PersistGate persistor={persister}>
-        <Navigation />
-      </PersistGate>
-    </Provider>
+    // <Provider store={store}>
+    //   <PersistGate persistor={persister}>
+    <Navigation />
+    //   </PersistGate>
+    // </Provider>
   );
 };
 

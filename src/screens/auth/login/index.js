@@ -12,7 +12,6 @@ import colors from '../../../constants/colors';
 import Button from '../../../components/button';
 import MiniTextInput from '../../../components/miniTextInput';
 import {color} from 'react-native-reanimated';
-import {login} from '../../../redux/actions/AuthActions';
 
 class Login extends React.Component {
   state = {
