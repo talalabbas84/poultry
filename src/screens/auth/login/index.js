@@ -11,7 +11,6 @@ import TextInput from '../../../components/textInput';
 import colors from '../../../constants/colors';
 import Button from '../../../components/button';
 import MiniTextInput from '../../../components/miniTextInput';
-import {color} from 'react-native-reanimated';
 
 class Login extends React.Component {
   state = {
@@ -28,7 +27,7 @@ class Login extends React.Component {
       return (
         <View>
           <ScrollView style={{marginBottom: 50}}>
-            <View style={{marginVertical: 15}}></View>
+            <View style={{marginVertical: 15}} />
             <Text style={s.textStyle}>Origin</Text>
             <TextInput placeholder="Lahore,Pk" />
 
@@ -44,7 +43,7 @@ class Login extends React.Component {
 
             <TextInput placeholder="Class" />
 
-            <View style={{marginVertical: 10}}></View>
+            <View style={{marginVertical: 10}} />
 
             <Button title="Search" />
           </ScrollView>
@@ -58,7 +57,7 @@ class Login extends React.Component {
       return (
         <View>
           <ScrollView style={{marginBottom: 50}}>
-            <View style={{marginVertical: 15}}></View>
+            <View style={{marginVertical: 15}} />
 
             <Text style={s.textStyle}>Origin</Text>
             <TextInput placeholder="Lahore,Pk" />
@@ -78,7 +77,7 @@ class Login extends React.Component {
 
             <TextInput placeholder="Class" />
 
-            <View style={{marginVertical: 10}}></View>
+            <View style={{marginVertical: 10}} />
 
             <Button title="Search" />
           </ScrollView>
@@ -91,7 +90,7 @@ class Login extends React.Component {
       return (
         <View>
           <ScrollView style={{marginBottom: 50}}>
-            <View style={{marginVertical: 10}}></View>
+            <View style={{marginVertical: 10}} />
 
             <Text style={s.textStyle}>Origin</Text>
             <TextInput placeholder="Lahore,Pk" />
@@ -102,7 +101,7 @@ class Login extends React.Component {
             <Text style={s.textStyle}>Departure</Text>
             <TextInput placeholder="London UK," />
 
-            <View style={s.line}></View>
+            <View style={s.line} />
             <Text style={s.stop}>ADD STOP</Text>
             <Text style={s.textStyle1}>Travelers</Text>
 
@@ -110,7 +109,7 @@ class Login extends React.Component {
 
             <TextInput placeholder="Class" />
 
-            <View style={{marginVertical: 10}}></View>
+            <View style={{marginVertical: 10}} />
 
             <Button title="Search" />
           </ScrollView>
