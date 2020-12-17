@@ -5,22 +5,49 @@ import Button from '../../components/button';
 import TextInput from '../../components/textInput';
 import colors from '../../constants/colors';
 import {phone, logo, user} from '../../constants/images';
-import Axios from 'axios';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Login extends React.Component {
   state = {
     name: '',
     number: '',
   };
+  // saveData = async (value) => {
+  //   alert('coming here');
+  //   try {
+  //     await AsyncStorage.setItem('token', value);
+  //   } catch (e) {
+  //     alert(e);
+  //   }
+  // };
 
   validateLogin = async (name, number) => {
-    // console logging the name and number for testing
-    console.log(this.state);
-
-    // make api call to login
-
-    //  perform navigation if all goes well
-    this.props.navigation.navigate('DrawerStack');
+    if (name !== '' && number !== '') {
+      // const body = JSON.stringify({name, number});
+      const formData = new FormData();
+      formData.append('number', number);
+      formData.append('name', name);
+      // alert('dsads');
+      axios({
+        method: 'post',
+        url: 'https://www.pakpoultryhub.com/api/user_signin.php',
+        data: formData,
+        headers: {'Content-Type': 'multipart/form-data'},
+      })
+        .then(async (response) => {
+          //handle success
+          // alert('success');
+          console.log(response.data);
+          await AsyncStorage.setItem('token', response.data.token);
+          this.props.navigation.navigate('DrawerStack');
+        })
+        .catch(function (response) {
+          //handle error
+          alert('error');
+          console.log(response);
+        });
+    }
   };
 
   render() {
