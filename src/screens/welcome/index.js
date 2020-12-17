@@ -7,11 +7,27 @@ import colors from '../../constants/colors';
 import {phone, logo} from '../../constants/images';
 
 class Home extends React.Component {
+  state = {
+    number: -1,
+  };
+
+  onSignUp = (number) => {
+    // number not -1
+    if (number !== -1) {
+      console.log(number);
+    }
+
+    // implement the call
+
+    // navigate to drawer stack
+    // this.props.navigation.navigate('DrawerStack');
+  };
+
   render() {
     return (
       <View style={{flex: 1, backgroundColor: colors.backColor}}>
         <Image style={AppStyles.imageLogo} source={logo} />
-        <View style={AppStyles.line}></View>
+        <View style={AppStyles.line} />
         <Text style={AppStyles.boldText}>Welcome</Text>
 
         <TextInput
@@ -19,9 +35,12 @@ class Home extends React.Component {
           keyboardType={'numeric'}
           image={phone}
           placeholder="Phone Number"
+          onChangeText={(e) => this.setState({...this.state, number: e})}
         />
         <Button
-          onPress={() => this.props.navigation.navigate('Verfication')}
+          onPress={() => {
+            this.onSignUp(this.state.number);
+          }}
           red
           title="SIGN UP"
         />

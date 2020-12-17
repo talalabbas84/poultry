@@ -20,7 +20,7 @@ class Login extends React.Component {
     // make api call to login
 
     //  perform navigation if all goes well
-    this.props.navigation.navigate('DrawerStack');
+    // this.props.navigation.navigate('DrawerStack');
   };
 
   render() {
