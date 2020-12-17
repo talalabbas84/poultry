@@ -7,12 +7,7 @@ import colors from '../../constants/colors';
 import {phone, logo} from '../../constants/images';
 
 class Home extends React.Component {
-  state = {
-    phoneNo: '',
-  };
-
   render() {
-    console.log(this.state.phoneNo);
     return (
       <View style={{flex: 1, backgroundColor: colors.backColor}}>
         <Image style={AppStyles.imageLogo} source={logo} />
@@ -24,11 +19,6 @@ class Home extends React.Component {
           keyboardType={'numeric'}
           image={phone}
           placeholder="Phone Number"
-          onChangeTextHandler={() => {
-            this.setState({
-              phoneNo,
-            });
-          }}
         />
         <Button
           onPress={() => this.props.navigation.navigate('Verfication')}

@@ -12,12 +12,8 @@ import {Card} from 'native-base';
 import colors from '../constants/colors';
 
 const HEIGHT = Dimensions.get('window').height;
+
 const textInput = (props) => {
-  const [text, setText] = useState('');
-  props.onChangeTextHandler(text);
-  const onChangeTextHandler = (text) => {
-    setText(text);
-  };
   return (
     <Card style={styles.text}>
       <Image source={props.image} style={styles.image} />
@@ -25,10 +21,9 @@ const textInput = (props) => {
         style={styles.input}
         maxLength={props.length}
         keyboardType={props.keyboardType}
-        text={text}
         placeholder={props.placeholder}
-        onChangeText={onChangeTextHandler}
-        // onChangeTextHandler={onChangeTextHandler}
+        onChange={props.onChange}
+        onChangeText={props.onChangeText}
       />
     </Card>
   );
