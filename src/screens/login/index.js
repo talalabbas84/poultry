@@ -44,9 +44,11 @@ class Login extends React.Component {
         })
         .catch(function (response) {
           //handle error
-          alert('error');
+          alert('User doesnt exist');
           console.log(response);
         });
+    } else {
+      alert('Please type name and phone number');
     }
   };
 
