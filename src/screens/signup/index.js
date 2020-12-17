@@ -5,6 +5,8 @@ import Button from '../../components/button';
 import TextInput from '../../components/textInput';
 import colors from '../../constants/colors';
 import {phone, logo, user} from '../../constants/images';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Home extends React.Component {
   state = {
@@ -16,6 +18,35 @@ class Home extends React.Component {
   onSignUp = () => {
     console.log(this.num);
     console.log(this.state.name);
+    if (this.num !== '' && this.state.name !== '') {
+      // const body = JSON.stringify({name, number});
+      const formData = new FormData();
+      formData.append('number', this.num);
+      formData.append('name', this.state.name);
+      // alert('dsads');
+      axios({
+        method: 'post',
+        url: 'https://www.pakpoultryhub.com/api/user_signup.php',
+        data: formData,
+        headers: {'Content-Type': 'multipart/form-data'},
+      })
+        .then(async (response) => {
+          // alert('suxxe');
+          //handle success
+          // alert('success');
+          console.log(response.data);
+          alert('User registered successfully.Please log into application');
+          // await AsyncStorage.setItem('token', response.data.token);
+          this.props.navigation.navigate('Login');
+        })
+        .catch(function (response) {
+          //handle error
+          alert('User already exitsts');
+          console.log(response);
+        });
+    } else {
+      alert('Please type name and phone number');
+    }
   };
 
   render() {
