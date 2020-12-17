@@ -41,7 +41,7 @@ class Home extends React.Component {
         })
         .catch(function (response) {
           //handle error
-          alert('User already exitsts');
+          alert('User already exists');
           console.log(response);
         });
     } else {
