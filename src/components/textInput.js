@@ -24,6 +24,7 @@ const textInput = (props) => {
         placeholder={props.placeholder}
         onChange={props.onChange}
         onChangeText={props.onChangeText}
+        value={props.value}
       />
     </Card>
   );

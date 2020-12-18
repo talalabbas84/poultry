@@ -36,9 +36,39 @@ class Create extends React.Component {
     showCity: true,
     showPhone: true,
     showGrade: false,
-    selectedNasal: '',
-    selectedGender: '',
-    selectedCity: '',
+
+    user_id: -1,
+    category_id: -1, // TODO: check id
+    city_id: -1,
+    weight: -1,
+    type: -1,
+    rate: -1,
+    lessOnCash: '',
+    address: '',
+    number: '',
+    location: '',
+    date: new Date().toString().slice(4, 15),
+    name: '',
+    images: '',
+    view: '',
+  };
+
+  // user_id, category_id, city_id, weight, type, rate, less_on_cash, address,
+  //  phone_no, location, like, view, images, date
+
+  constructor(props) {
+    super(props);
+    const user_id = 1;
+    const category_id = 0;
+    const city_id = 1;
+
+    this.setState({...this.state, user_id, category_id, city_id});
+  }
+
+  createPost = () => {
+    console.log(this.state);
+
+    // all varaiables are here, just trim the date
   };
 
   render() {
@@ -62,36 +92,21 @@ class Create extends React.Component {
           {showRate && (
             <View>
               <Text style={styles.text}>ہیچری کا نام درج کریں</Text>
-              <CustomTextInput image={circle} placeholder="نام" />
-            </View>
-          )}
-
-          {showWeight && (
-            <View>
-              <Text style={styles.text}>چکس گریڈ درج کریں</Text>
-              <Card style={AppStyles.pickerBack}>
-                <Picker
-                  selectedValue={selectedNasal}
-                  style={AppStyles.picker}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.setState({selectedNasal: itemValue})
-                  }>
-                  <Picker.Item label="سٹارٹر" value=" سٹارٹر" />
-                  <Picker.Item label="A گریڈ" value="A     گریڈ" />
-                  <Picker.Item label=" A++ گریڈ" value="A++ گریڈ" />
-                </Picker>
-              </Card>
-            </View>
-          )}
-
-          {showRate && (
-            <View>
-              <Text style={styles.text}>چیکس کی تعداد</Text>
               <CustomTextInput
-                length={5}
-                keyboardType="numeric"
+                onChangeText={(e) => this.setState({...this.state, name: e})}
                 image={circle}
-                placeholder=""
+                placeholder="نام"
+              />
+            </View>
+          )}
+
+          {showLess && (
+            <View>
+              <Text style={styles.text}>فارم کا پتہ درج کریں</Text>
+              <CustomTextInput
+                onChangeText={(e) => this.setState({...this.state, address: e})}
+                image={downArrow}
+                placeholder="پتہ"
               />
             </View>
           )}
@@ -105,7 +120,7 @@ class Create extends React.Component {
                 selectedValue={selectedCity}
                 style={AppStyles.picker}
                 onValueChange={(itemValue, itemIndex) =>
-                  this.setState({selectedCity: itemValue})
+                  this.setState({...this.state, location: itemValue})
                 }>
                 <Picker.Item label="کراچی" value="کراچی" />
                 <Picker.Item label="لاہور" value="لاہور" />
@@ -123,6 +138,7 @@ class Create extends React.Component {
                 keyboardType="numeric"
                 image={circle}
                 placeholder="گرام"
+                onChangeText={(e) => this.setState({...this.state, weight: e})}
               />
             </View>
           )}
@@ -131,7 +147,23 @@ class Create extends React.Component {
             <Text style={styles.text}>
               ریٹ مارکیٹ کے مطابق /ریٹ خود درج کریں
             </Text>
-            <CustomTextInput image={circle} placeholder="درج کریں" />
+            <CustomTextInput
+              onChangeText={(e) => this.setState({...this.state, rate: e})}
+              image={circle}
+              placeholder="درج کریں"
+            />
+            {showLess && (
+              <View>
+                <Text style={styles.text}>نقد پر کم</Text>
+                <CustomTextInput
+                  onChangeText={(e) =>
+                    this.setState({...this.state, lessOnCash: e})
+                  }
+                  image={circle}
+                  placeholder="Enter less(e.g Rs.5)"
+                />
+              </View>
+            )}
           </View>
           {showPhone && (
             <View>
@@ -139,6 +171,7 @@ class Create extends React.Component {
               <CustomTextInput
                 keyboardType="numeric"
                 image={phone}
+                onChangeText={(e) => this.setState({...this.state, number: e})}
                 placeholder="eg.03xxxxxxx"
               />
             </View>
@@ -208,7 +241,7 @@ class Create extends React.Component {
             your post will be deleted automatically after 24 hours
           </Text>
 
-          <Button red title="پوسٹ" />
+          <Button red title="پوسٹ" onPress={() => this.createPost()} />
         </ScrollView>
       </View>
     );

@@ -38,7 +38,6 @@ class Login extends React.Component {
         .then(async (response) => {
           //handle success
           // alert('success');
-          console.log(response.data);
           await AsyncStorage.setItem('token', response.data.token);
           await AsyncStorage.setItem('user_id', response.data.user_id);
           this.props.navigation.navigate('DrawerStack');
@@ -46,7 +45,6 @@ class Login extends React.Component {
         .catch(function (response) {
           //handle error
           alert('User doesnt exist');
-          console.log(response);
         });
     } else {
       alert('Please type name and phone number');

@@ -27,6 +27,12 @@ class Home extends React.Component {
         like: false,
         count: '10 likes',
         clickedCount: 'post click :#10',
+        weight: 1134,
+        type: 'Lorem',
+        rate: 1111,
+        less_on_cash: 2122,
+        location: 'Karachi',
+        address: 'Clifton Block 7 ',
       },
       {
         id: 2,
@@ -35,14 +41,35 @@ class Home extends React.Component {
         like: false,
         count: '20 likes',
         clickedCount: 'post click :#12',
+
+        weight: 123123,
+        type: 'Lorem',
+        rate: 121,
+        less_on_cash: 222,
+        location: 'Lahore',
+        address: 'Sector 1/2 ',
       },
     ],
   };
 
-  navigateToEdit = (id) => {
-    console.log(id);
-
-    this.props.navigation.navigate('EditAd', {id});
+  navigateToEdit = (
+    id,
+    weight,
+    rate,
+    type,
+    less_on_cash,
+    location,
+    address,
+  ) => {
+    this.props.navigation.navigate('EditAd', {
+      id,
+      weight,
+      rate,
+      type,
+      less_on_cash,
+      location,
+      address,
+    });
   };
 
   renderItem = ({item, index}) => {
@@ -72,61 +99,61 @@ class Home extends React.Component {
             <View>
               <View style={styles.row}>
                 <Text>Weight</Text>
-                <Text style={styles.blackText}>1134</Text>
+                <Text style={styles.blackText}>{item.weight}</Text>
               </View>
 
               <View style={styles.row}>
                 <Text>Type</Text>
-                <Text style={styles.blackText}>Lorem</Text>
+                <Text style={styles.blackText}>{item.type}</Text>
               </View>
 
               <View style={styles.row}>
                 <Text>rate </Text>
-                <Text style={styles.blackText}>788</Text>
+                <Text style={styles.blackText}>{item.rate}</Text>
               </View>
               <View style={styles.row}>
                 <Text>less on cash</Text>
-                <Text style={styles.blackText}>2122</Text>
+                <Text style={styles.blackText}>{item.less_on_cash}</Text>
               </View>
 
               <View style={styles.row}>
                 <Text>Address</Text>
-                <Text style={styles.blackText}>4208</Text>
+                <Text style={styles.blackText}>{item.address}</Text>
               </View>
 
               <View style={styles.row}>
-                <Text>city</Text>
-                <Text style={styles.blackText}>Rome</Text>
+                <Text>Location</Text>
+                <Text style={styles.blackText}>{item.location}</Text>
               </View>
             </View>
 
             <View>
               <View style={styles.row}>
                 <Text>Weight</Text>
-                <Text style={styles.blackText}>1134</Text>
+                <Text style={styles.blackText}>{item.weight}</Text>
               </View>
 
               <View style={styles.row}>
                 <Text>Type</Text>
-                <Text style={styles.blackText}>Lorem</Text>
+                <Text style={styles.blackText}>{item.type}</Text>
               </View>
 
               <View style={styles.row}>
                 <Text>rate </Text>
-                <Text style={styles.blackText}>788</Text>
+                <Text style={styles.blackText}>{item.rate}</Text>
               </View>
               <View style={styles.row}>
                 <Text>less on cash</Text>
-                <Text style={styles.blackText}>2122</Text>
+                <Text style={styles.blackText}>{item.less_on_cash}</Text>
               </View>
 
               <View style={styles.row}>
                 <Text>Address</Text>
-                <Text style={styles.blackText}>4208</Text>
+                <Text style={styles.blackText}>{item.address}</Text>
               </View>
 
               <View style={styles.row}>
-                <Text>city</Text>
+                <Text>Location</Text>
                 <Text style={styles.blackText}>Rome</Text>
               </View>
             </View>
@@ -135,7 +162,15 @@ class Home extends React.Component {
         <View style={styles.bottomBtn}>
           <TouchableOpacity
             onPress={() => {
-              this.navigateToEdit(item.id);
+              this.navigateToEdit(
+                item.id,
+                item.weight,
+                item.rate,
+                item.type,
+                item.less_on_cash,
+                item.location,
+                item.address,
+              );
             }}>
             <Text style={styles.redtext}>EDIT </Text>
           </TouchableOpacity>
@@ -155,6 +190,7 @@ class Home extends React.Component {
       <View style={{flex: 1, backgroundColor: colors.backColor}}>
         <Header title="میرے اشتھارات" navigation={this.props.navigation} />
 
+        <Text style={styles.title}>Broiler Ads </Text>
         <FlatList
           showsVerticalScrollIndicator={false}
           style={styles.FlatListStyles}
@@ -242,5 +278,13 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     resizeMode: 'contain',
+  },
+
+  title: {
+    fontSize: 17,
+
+    textAlign: 'center',
+    color: 'black',
+    padding: 10,
   },
 });
