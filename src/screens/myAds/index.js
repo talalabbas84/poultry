@@ -60,7 +60,10 @@ class Home extends React.Component {
   };
   componentDidMount() {
     this.props.navigation.addListener('focus', () => {
+      // alert('dss');
+      console.log('jsssssssssssssssssssssssssssssss');
       this.getData();
+      // alert('fddf');
     });
     // alert('ds');
     // this.focusListener = this.props.navigation.addListener('didFocus', () => {
@@ -90,7 +93,7 @@ class Home extends React.Component {
       const res2 = await axios.get(
         `https://www.pakpoultryhub.com/api/city.php`,
       );
-      console.log(res.data);
+      // console.log(res.data);
       this.setState({...this.setState, broilerData: res.data});
       this.setState({...this.setState, city: res2.data});
       // this.setState({})
@@ -116,7 +119,7 @@ class Home extends React.Component {
       post_id: id,
       user_id: await AsyncStorage.getItem('user_id'),
     });
-    console.log(body);
+    // console.log(body);
     this.setState({...this.setState, bool: true});
     // alert('dsads');
     axios({
@@ -128,7 +131,7 @@ class Home extends React.Component {
       },
     })
       .then(async (response) => {
-        console.log(response.data);
+        // console.log(response.data);
         // alert('suxxe');
         //handle success
         // alert('success');
@@ -168,7 +171,7 @@ class Home extends React.Component {
   renderItem = ({item, index}) => {
     // params = this.props.route.count;
     // console.log(his.props.route);
-    console.log(item);
+    // console.log(item);
     return (
       <Card style={styles.card}>
         <View
