@@ -186,6 +186,7 @@ class Home extends React.Component {
   };
 
   render() {
+    // alert('dss');
     return (
       <View style={{flex: 1, backgroundColor: colors.backColor}}>
         <Header title="میرے اشتھارات" navigation={this.props.navigation} />

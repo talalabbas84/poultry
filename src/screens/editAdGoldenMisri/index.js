@@ -88,7 +88,7 @@ class EditAd extends React.Component {
 
     axios({
       method: 'post',
-      url: 'https://www.pakpoultryhub.com/api/boiler_edit_submit.php',
+      url: 'https://www.pakpoultryhub.com/api/goldenmisri _edit_submit.php',
       data: body,
       headers: {
         'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ class EditAd extends React.Component {
         // console.log(response.data);
         alert('Post edit Successfully');
         // await AsyncStorage.setItem('token', response.data.token);
-        this.props.navigation.navigate('myAds');
+        this.props.navigation.navigate('myAdsGoldenMisri');
       })
       .catch(function (response) {
         //handle error

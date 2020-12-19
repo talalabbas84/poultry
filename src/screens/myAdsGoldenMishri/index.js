@@ -253,8 +253,10 @@ class Home extends React.Component {
               </View>
 
               <View style={styles.row}>
-                <Text>Location</Text>
-                <Text style={styles.blackText}>Rome</Text>
+                <Text>City</Text>
+                <Text style={styles.blackText}>
+                  {this.getCityName(item.city_id)}
+                </Text>
               </View>
             </View>
           </View>
