@@ -21,8 +21,10 @@ import {
   marker,
   camera,
 } from '../../../constants/images';
+import axios from 'axios';
 import {Card} from 'native-base';
 import AppStyles from '../../../appStyles/styles';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Create extends React.Component {
   state = {
@@ -39,41 +41,99 @@ class Create extends React.Component {
 
     nasal: '',
 
-    user_id: -1,
-    category_id: -1, // TODO: check id
-    city_id: -1,
-    weight: -1,
-    type: -1,
-    rate: -1,
+    user_id: null,
+    category_id: 1, // TODO: check id
+    city_id: null,
+    weight: null,
+    type: null,
+    rate: null,
     lessOnCash: '',
     address: '',
     number: '',
     location: '',
     date: new Date().toString().slice(4, 15),
+    name: '',
     images: '',
     view: '',
+    city_name: '',
+    city: [],
   };
 
   constructor(props) {
     super(props);
-    const user_id = '1';
-    const category_id = '0';
-    const sub_category_id = '3';
-    const city_id = '1';
+    //  Check this if we need subcategory id
+    const sub_category_id = 3;
 
-    this.setState({
-      ...this.state,
-      user_id: user_id,
-      category_id: category_id,
-      city_id: city_id,
-      sub_category_id: sub_category_id,
-    });
+    this.getUserid();
   }
 
-  createPost = () => {
-    console.log(this.state);
+  getUserid = async function name(params) {
+    this.setState({
+      user_id: await AsyncStorage.getItem('user_id'),
+    });
+  };
 
-    // generate an id? since it is needed for every post ig
+  componentDidMount() {
+    this.getData();
+  }
+  getData = async () => {
+    try {
+      const res2 = await axios.get(
+        `https://www.pakpoultryhub.com/api/city.php`,
+      );
+      // console.log(res.data);
+      this.setState({...this.setState, city: res2.data});
+      // alert('success');
+    } catch (err) {
+      // alert(err.message);
+    }
+  };
+
+  createPost = () => {
+    const body = JSON.stringify({
+      user_id: this.state.user_id,
+      category_id: this.state.category_id,
+      city_id: this.state.city_id ? this.state.city_id : this.state.city[0].id,
+      weight: this.state.weight,
+      type: this.state.type,
+      rate: this.state.rate,
+      less_on_cash: this.state.lessOnCash,
+      address: this.state.address,
+      phone_no: this.state.number,
+      location: this.state.location,
+      like: 'asdad',
+      view: 'asdad',
+      date: this.state.date,
+      images: 'm2.jpg',
+    });
+    // alert('dsads');
+    axios({
+      method: 'post',
+      // url: 'https://www.pakpoultryhub.com/api/boiler_post.php',  TODO: change dis
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        this.setState({
+          ...this.state,
+          weight: null,
+          type: null,
+          rate: null,
+          less_on_cash: '',
+          address: '',
+          phone_no: '',
+          location: '',
+        });
+        alert('Post added Successfully');
+        this.props.navigation.navigate('Available');
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
   };
 
   render() {
@@ -93,24 +153,6 @@ class Create extends React.Component {
         <ScrollView>
           <Header back navigation={this.props.navigation} title="CREATE POST" />
 
-          <View>
-            <Text style={styles.text}>انڈے کی نسل درج کریں</Text>
-            <Card style={AppStyles.pickerBack}>
-              <Picker
-                selectedValue={this.state.nasal}
-                style={AppStyles.picker}
-                onValueChange={(itemValue, itemIndex) =>
-                  this.setState({...this.state, nasal: itemValue})
-                }>
-                <Picker.Item label="گولڈن مصری" value=" گولڈن مصری" />
-                <Picker.Item label="ہائی لائن" value="ہائی لائن" />
-                <Picker.Item label="اسڑالورپ" value="اسڑالورپ" />
-                <Picker.Item label="آر آئی آر" value="آر آئی آر " />
-                <Picker.Item label="اصل" value="اصل" />
-              </Picker>
-            </Card>
-          </View>
-
           {showType && (
             <View>
               <Text style={styles.text}>انڈے کا وزن درج کرے</Text>
@@ -124,12 +166,10 @@ class Create extends React.Component {
 
           {showRate && (
             <View>
-              <Text style={styles.text}>ریٹ فی پیٹی/ ریٹ فی نگ</Text>
+              <Text style={styles.text}>ریٹ فی نگ</Text>
               <CustomTextInput
                 image={circle}
-                onChangeText={(e) =>
-                  this.setState({...this.state, rate_per_pati: e})
-                }
+                onChangeText={(e) => this.setState({...this.state, rate: e})}
                 placeholder="درج کرے"
               />
             </View>
@@ -156,7 +196,7 @@ class Create extends React.Component {
 
           {showLess && (
             <View>
-              <Text style={styles.text}> درج کریں</Text>
+              <Text style={styles.text}> درج کریں less on cash</Text>
               <CustomTextInput
                 image={downArrow}
                 placeholder="Enter less(e.g Rs.5)"
@@ -178,13 +218,6 @@ class Create extends React.Component {
             </View>
           )}
 
-          {showAddress && (
-            <View>
-              <Text style={styles.text}>تفصیل درج کریم</Text>
-              <CustomTextInput image={marker} placeholder="درج کرے" />
-            </View>
-          )}
-
           {showPhone && (
             <View>
               <Text style={styles.text}>فون نمبر درج کریں</Text>
@@ -196,15 +229,6 @@ class Create extends React.Component {
               />
             </View>
           )}
-
-          {/* <Text style={styles.text}>Attach images</Text>
-
-                <TouchableOpacity style={styles.camera}>
-                        <Image source={camera}/>
-                </TouchableOpacity>
-
-                <Text style={[styles.text,{alignSelf:'center',fontSize:12}]}>your post will be deleted automatically after 24 hours</Text> */}
-
           <Button red title="پوسٹ" onPress={this.createPost} />
         </ScrollView>
       </View>
