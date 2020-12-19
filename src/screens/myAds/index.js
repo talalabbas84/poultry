@@ -61,7 +61,6 @@ class Home extends React.Component {
   componentDidMount() {
     this.props.navigation.addListener('focus', () => {
       // alert('dss');
-      console.log('jsssssssssssssssssssssssssssssss');
       this.getData();
       // alert('fddf');
     });
@@ -156,6 +155,7 @@ class Home extends React.Component {
     less_on_cash,
     location,
     address,
+    city_id,
   ) => {
     this.props.navigation.navigate('EditAd', {
       id,
@@ -165,6 +165,7 @@ class Home extends React.Component {
       less_on_cash,
       location,
       address,
+      city_id,
     });
   };
 
@@ -221,8 +222,10 @@ class Home extends React.Component {
               </View>
 
               <View style={styles.row}>
-                <Text>Location</Text>
-                <Text style={styles.blackText}>{item.location}</Text>
+                <Text>City</Text>
+                <Text style={styles.blackText}>
+                  {this.getCityName(item.city_id)}
+                </Text>
               </View>
             </View>
 
@@ -252,8 +255,10 @@ class Home extends React.Component {
               </View>
 
               <View style={styles.row}>
-                <Text>Location</Text>
-                <Text style={styles.blackText}>{item.location}</Text>
+                <Text>City</Text>
+                <Text style={styles.blackText}>
+                  {this.getCityName(item.city_id)}
+                </Text>
               </View>
             </View>
           </View>
@@ -269,6 +274,7 @@ class Home extends React.Component {
                 item.less_on_cash,
                 item.location,
                 item.address,
+                item.city_id,
               );
             }}>
             <Text style={styles.redtext}>EDIT </Text>

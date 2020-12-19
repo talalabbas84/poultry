@@ -96,13 +96,6 @@ class Create extends React.Component {
   };
 
   createPost = () => {
-    // console.log(this.state);
-
-    // const body = JSON.stringify({name, number});
-    console.log(this.state.weight, 'weighttttt');
-    console.log(this.state.type, 'typee');
-    console.log(this.state.city[0].id, 'rateee');
-
     const body = JSON.stringify({
       user_id: this.state.user_id,
       category_id: this.state.category_id,
@@ -129,30 +122,17 @@ class Create extends React.Component {
       },
     })
       .then(async (response) => {
-        // alert('suxxe');
-        //handle success
-        // alert('success');
-        // console.log(response.data);
-        // this.setState({
-        //   ...this.setState,
-
-        //   city_id: null,
-        //   weight: null,
-        //   type: null,
-        //   rate: null,
-        //   lessOnCash: '',
-        //   address: '',
-        //   number: '',
-        //   location: '',
-        //   date: new Date().toString().slice(4, 15),
-        //   name: '',
-        //   images: '',
-        //   view: '',
-        //   city_name: '',
-        //   city: [],
-        // });
+        this.setState({
+          ...this.state,
+          weight: null,
+          type: null,
+          rate: null,
+          less_on_cash: '',
+          address: '',
+          phone_no: '',
+          location: '',
+        });
         alert('Post added Successfully');
-        // await AsyncStorage.setItem('token', response.data.token);
         this.props.navigation.navigate('Available');
       })
       .catch(function (response) {

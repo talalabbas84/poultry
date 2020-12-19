@@ -41,11 +41,34 @@ class EditAd extends React.Component {
     location: this.props.route.params.location,
     type: this.props.route.params.type,
     date: new Date().toString().slice(4, 15),
+    city_id: this.props.route.params.city_id,
+    city: [],
+  };
+
+  componentDidMount() {
+    this.getData();
+  }
+  getData = async () => {
+    // alert('ds');
+    try {
+      const res2 = await axios.get(
+        `https://www.pakpoultryhub.com/api/city.php`,
+      );
+      // console.log(res.data);
+
+      this.setState({...this.setState, city: res2.data});
+      // alert('success');
+
+      console.log(res2.data);
+    } catch (err) {
+      // alert(err.message);
+    }
   };
 
   editPost = async () => {
     // edit the post here
 
+    console.log('---------');
     console.log(this.state);
     const body = JSON.stringify({
       id: this.state.id,
@@ -58,12 +81,11 @@ class EditAd extends React.Component {
       address: this.state.address,
       phone_no: this.state.number,
       location: this.state.location,
-      like: 'asdad',
-      view: 'asdad',
       date: this.state.date,
       images: 'm2.jpg',
+      city_id: this.state.city_id,
     });
-    // alert('dsads');
+
     axios({
       method: 'post',
       url: 'https://www.pakpoultryhub.com/api/boiler_edit_submit.php',
@@ -90,7 +112,7 @@ class EditAd extends React.Component {
   };
 
   render() {
-    return (
+    return this.state.city && this.state.city.length > 0 ? (
       <View>
         <Header
           back
@@ -170,13 +192,16 @@ class EditAd extends React.Component {
 
           <Text style={styles.header}> Location </Text>
 
-          <CustomTextInput
-            value={this.state.location}
-            onChangeText={(e) => this.setState({...this.state, location: e})}
-            length={20}
-            image={circle}
-            placeholder="Location"
-          />
+          <Picker
+            selectedValue={this.state.city_id}
+            style={AppStyles.picker}
+            onValueChange={(itemValue, itemIndex) =>
+              this.setState({...this.state, city_id: itemValue})
+            }>
+            {this.state.city.map((city) => (
+              <Picker.Item label={city.city_name} value={city.id} />
+            ))}
+          </Picker>
 
           <View style={{marginBottom: 50, marginTop: 20}}>
             <Button
@@ -190,7 +215,7 @@ class EditAd extends React.Component {
           <View style={{margin: 10}} />
         </ScrollView>
       </View>
-    );
+    ) : null;
   }
 }
 
