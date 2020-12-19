@@ -58,17 +58,9 @@ class Create extends React.Component {
     city: [],
   };
 
-  // user_id, category_id, city_id, weight, type, rate, less_on_cash, address,
-  //  phone_no, location, like, view, images, date
-
   constructor(props) {
     super(props);
-    const user_id = 1;
-    const category_id = 0;
-    const city_id = 1;
 
-    // this.setState({...this.state, user_id, category_id, city_id});
-    // AsyncStorage.getItem;
     this.getUserid();
   }
   getUserid = async function name(params) {
@@ -81,7 +73,6 @@ class Create extends React.Component {
     this.getData();
   }
   getData = async () => {
-    // alert('ds');
     try {
       const res2 = await axios.get(
         `https://www.pakpoultryhub.com/api/city.php`,
@@ -202,9 +193,6 @@ class Create extends React.Component {
                 {this.state.city.map((city) => (
                   <Picker.Item label={city.city_name} value={city.id} />
                 ))}
-                {/* <Picker.Item label="لاہور" value="لاہور" />
-                <Picker.Item label="اسلام آباد" value="اسلام آباد" />
-                <Picker.Item label="سیالکوٹ" value="سیالکوٹ" /> */}
               </Picker>
             </Card>
           </View>
@@ -255,66 +243,6 @@ class Create extends React.Component {
               />
             </View>
           )}
-
-          {/* 
-            <View>
-                <Text style={styles.text}>تعداد درج کریں</Text>
-                <CustomTextInput
-                length={5}
-                image={marker} placeholder="درج کریں"/>
-
-            </View> 
-          
-            <View>
-                <Text style={styles.text}>عمر درج کریں</Text>
-                <CustomTextInput
-                image={marker} placeholder="دن درج کریں"/>
-
-            </View> 
-            <View>
-                <Text style={styles.text}>فارم کا پتہ درج کریں</Text>
-                <CustomTextInput
-                image={marker} placeholder="پتہ درج کریں"/>
-
-            </View> 
-
-            <View>
-                <Text style={styles.text}>فون نمبر درج کریں</Text>
-                <CustomTextInput
-                image={marker} placeholder=" درج کریں"/>
-
-            </View> 
-
-            <View>
-                <Text style={styles.text}>تفصیل درج کریں</Text>
-                <CustomTextInput
-                image={marker} placeholder=" درج کریں"/>
-
-            </View> 
-
-            */}
-
-          {/*         
-        {showCity &&        <View>
-                    <Text style={styles.text}>Enter your city</Text>
-                    <CustomTextInput image={city} placeholder="Enter your city"/>
-
-
-                </View>}
-                
-         {showPhone &&       <View>
-                    <Text style={styles.text}>فون نمبر درج کریں</Text>
-                    <CustomTextInput
-                    keyboardType='numeric'
-                    image={phone} placeholder="eg.03xxxxxxx"/>
-
-                </View>} */}
-
-          {/* <Text style={styles.text}>تصویر لگائیں</Text>
-
-                    <TouchableOpacity style={styles.camera}>
-                            <Image source={camera}/>
-                    </TouchableOpacity> */}
 
           <Text style={[styles.text, {alignSelf: 'center', fontSize: 12}]}>
             your post will be deleted automatically after 24 hours
