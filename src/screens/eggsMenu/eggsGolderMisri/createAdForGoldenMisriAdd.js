@@ -77,6 +77,7 @@ class Create extends React.Component {
   };
 
   render() {
+    alert('dssd');
     const {
       showWeight,
       showType,

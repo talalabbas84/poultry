@@ -14,6 +14,8 @@ import colors from '../../constants/colors';
 import {eggs, chick, chicken, tag, like, unlike} from '../../constants/images';
 import AppStyles from '../../styles';
 
+import axios from 'axios';
+
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
 class Home extends React.Component {
@@ -73,6 +75,7 @@ class Home extends React.Component {
   };
 
   renderItem = ({item, index}) => {
+    console.log(item, 'itemmmmmmmm');
     return (
       <Card style={styles.card}>
         <View
@@ -186,6 +189,8 @@ class Home extends React.Component {
   };
 
   render() {
+    // alert('dsds');
+    // console.log(this.state.goldenMisriData, 'dsdsdsds');
     return (
       <View style={{flex: 1, backgroundColor: colors.backColor}}>
         <Header title="میرے اشتھارات" navigation={this.props.navigation} />
@@ -195,7 +200,7 @@ class Home extends React.Component {
         <FlatList
           showsVerticalScrollIndicator={false}
           style={styles.FlatListStyles}
-          data={this.state.data}
+          data={this.state.goldenMisriData}
           renderItem={this.renderItem}
           keyExtractor={(key, index) => index.toString()}
         />
