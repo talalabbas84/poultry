@@ -90,6 +90,7 @@ class Create extends React.Component {
   };
 
   createPost = () => {
+    alert('ds');
     const body = JSON.stringify({
       user_id: this.state.user_id,
       category_id: this.state.category_id,
@@ -107,9 +108,10 @@ class Create extends React.Component {
       images: 'm2.jpg',
     });
     // alert('dsads');
+    console.log(body);
     axios({
       method: 'post',
-      // url: 'https://www.pakpoultryhub.com/api/boiler_post.php',  TODO: change dis
+      url: 'https://www.pakpoultryhub.com/api/goldenmisri_post.php',
       data: body,
       headers: {
         'Content-Type': 'application/json',
@@ -127,7 +129,7 @@ class Create extends React.Component {
           location: '',
         });
         alert('Post added Successfully');
-        this.props.navigation.navigate('Available');
+        this.props.navigation.navigate('GolderMisiShowAdd');
       })
       .catch(function (response) {
         //handle error
@@ -137,7 +139,7 @@ class Create extends React.Component {
   };
 
   render() {
-    alert('dssd');
+    // alert('dssd');
     const {
       showWeight,
       showType,
@@ -181,15 +183,14 @@ class Create extends React.Component {
             </Text>
             <Card style={AppStyles.pickerBack}>
               <Picker
-                selectedValue={this.state.location}
+                selectedValue={this.state.city_id}
                 style={AppStyles.picker}
                 onValueChange={(itemValue, itemIndex) =>
-                  this.setState({...this.state, location: itemValue})
+                  this.setState({...this.state, city_id: itemValue})
                 }>
-                <Picker.Item label="کراچی" value="کراچی" />
-                <Picker.Item label="لاہور" value="لاہور" />
-                <Picker.Item label="اسلام آباد" value="اسلام آباد" />
-                <Picker.Item label="سیالکوٹ" value="سیالکوٹ" />
+                {this.state.city.map((city) => (
+                  <Picker.Item label={city.city_name} value={city.id} />
+                ))}
               </Picker>
             </Card>
           </View>

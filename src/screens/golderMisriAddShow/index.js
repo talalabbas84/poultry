@@ -220,7 +220,7 @@ class Home extends React.Component {
 
         <TouchableOpacity
           onPress={() =>
-            this.props.navigation.navigate('GoldenMisriAdd', {
+            this.props.navigation.navigate('CreateAddForEgssGolderMisri', {
               from,
             })
           }

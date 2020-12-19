@@ -15,6 +15,7 @@ import {eggs, chick, chicken, tag, like, unlike} from '../../constants/images';
 import AppStyles from '../../styles';
 
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
@@ -52,6 +53,98 @@ class Home extends React.Component {
         address: 'Sector 1/2 ',
       },
     ],
+    goldenMisriData: [],
+    city: [],
+    bool: true,
+  };
+  componentDidMount() {
+    this.props.navigation.addListener('focus', () => {
+      // alert('dss');
+      this.getData();
+      // alert('fddf');
+    });
+    // alert('ds');
+    // this.focusListener = this.props.navigation.addListener('didFocus', () => {
+    //   alert('dssd');
+    //   this.getData();
+    // });
+    this.getData();
+  }
+  // componentWillUnmount() {
+  //   this.focusListener.remove();
+  // }
+  componentDidUpdate(prevProps, prevState) {
+    // console.log(prevProps);
+    if (prevState.bool !== this.state.bool) {
+      this.getData();
+    }
+  }
+
+  getData = async () => {
+    // alert('ds');
+    const link = `https://www.pakpoultryhub.com/api/goldenmisri_category_by_user.php?user_id=${await AsyncStorage.getItem(
+      'user_id',
+    )}`;
+    console.log(link);
+    try {
+      const res = await axios.get(link);
+      console.log(res.data, 'ressssssssssssss');
+      const res2 = await axios.get(
+        `https://www.pakpoultryhub.com/api/city.php`,
+      );
+      // console.log(res.data);
+      this.setState({...this.setState, goldenMisriData: res.data});
+      this.setState({...this.setState, city: res2.data});
+      // this.setState({})
+      // alert('success');
+    } catch (err) {
+      // alert(err.message);
+    }
+  };
+
+  getCityName = (city_id) => {
+    // alert('hi');
+    let city_name = '';
+    this.state.city.map((city) => {
+      if (city.id == city_id) {
+        city_name = city.city_name;
+      }
+    });
+    return city_name;
+  };
+
+  deleteHandler = async (id) => {
+    const body = JSON.stringify({
+      post_id: id,
+      user_id: await AsyncStorage.getItem('user_id'),
+    });
+    // console.log(body);
+    this.setState({...this.setState, bool: true});
+    // alert('dsads');
+    axios({
+      method: 'post',
+      url: 'https://www.pakpoultryhub.com/api/goldenmisri_delete.php',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        // console.log(response.data);
+        // alert('suxxe');
+        //handle success
+        // alert('success');
+        // console.log(response.data);
+        alert('Post deleted Successfully');
+        // await AsyncStorage.setItem('token', response.data.token);
+        // this.props.navigation.navigate('myAds');
+        this.setState({...this.setState, bool: false});
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
   };
 
   navigateToEdit = (
@@ -62,8 +155,9 @@ class Home extends React.Component {
     less_on_cash,
     location,
     address,
+    city_id,
   ) => {
-    this.props.navigation.navigate('EditAd', {
+    this.props.navigation.navigate('EditAdGoldenMisri', {
       id,
       weight,
       rate,
@@ -71,6 +165,7 @@ class Home extends React.Component {
       less_on_cash,
       location,
       address,
+      city_id,
     });
   };
 
@@ -106,8 +201,10 @@ class Home extends React.Component {
               </View>
 
               <View style={styles.row}>
-                <Text>Type</Text>
-                <Text style={styles.blackText}>{item.type}</Text>
+                <Text>City</Text>
+                <Text style={styles.blackText}>
+                  {this.getCityName(item.city_id)}
+                </Text>
               </View>
 
               <View style={styles.row}>
@@ -173,6 +270,7 @@ class Home extends React.Component {
                 item.less_on_cash,
                 item.location,
                 item.address,
+                item.city_id,
               );
             }}>
             <Text style={styles.redtext}>EDIT </Text>
@@ -180,7 +278,7 @@ class Home extends React.Component {
 
           <View style={styles.line} />
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => this.deleteHandler(item.id)}>
             <Text style={styles.redtext}>DELETE</Text>
           </TouchableOpacity>
         </View>
@@ -190,7 +288,7 @@ class Home extends React.Component {
 
   render() {
     // alert('dsds');
-    // console.log(this.state.goldenMisriData, 'dsdsdsds');
+    console.log(this.state.goldenMisriData, 'dsdsdsds');
     return (
       <View style={{flex: 1, backgroundColor: colors.backColor}}>
         <Header title="میرے اشتھارات" navigation={this.props.navigation} />
