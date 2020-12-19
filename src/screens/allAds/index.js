@@ -46,17 +46,23 @@ class Home extends React.Component {
       {title: 'SHEadsaD', urdutitle: 'شیڈ', image: shed, route: 'ShedCat'},
       // {title:'RATE', urdutitle:'شرح',image:rate,route:'myAds'},
     ],
+    count: 0,
   };
   renderItem = ({item, index}) => {
     if (index === 4) {
       return (
         <TouchableOpacity
           // onPress={()=> alert(item.title)}
-          onPress={() =>
+          onPress={() => {
+            this.setState((state) => ({
+              count: state.count + 1,
+            }));
+            console.log(this.state.count);
             this.props.navigation.navigate(item.route, {
               from: item.title,
-            })
-          }
+              count: this.state.count,
+            });
+          }}
           style={styles.mainView}>
           <Card style={[styles.card, {elevation: 10}]}>
             <View style={{flexDirection: 'row'}}>
@@ -70,7 +76,14 @@ class Home extends React.Component {
     }
     return (
       <TouchableOpacity
-        onPress={() => this.props.navigation.navigate(item.route)}
+        onPress={() => {
+          this.setState((state) => ({
+            count: state.count + 1,
+          }));
+          this.props.navigation.navigate(item.route, {
+            count: this.state.count,
+          });
+        }}
         style={styles.mainView}>
         <Card style={[styles.card, {elevation: 10}]}>
           <Image source={item.image} style={styles.card} />

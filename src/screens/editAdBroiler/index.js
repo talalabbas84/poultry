@@ -13,6 +13,7 @@ import Header from '../../components/header';
 import CustomTextInput from '../../components/textInput';
 import colors from '../../constants/colors';
 import Button from '../../components/button';
+import axios from 'axios';
 
 import {
   phone,
@@ -25,11 +26,13 @@ import {
 } from '../../constants/images';
 import {Card} from 'native-base';
 import AppStyles from '../../appStyles/styles';
+import AsyncStorage from '@react-native-community/async-storage';
 class EditAd extends React.Component {
   route;
 
   params = this.props.route.params;
   state = {
+    id: this.props.route.params.id,
     weight: this.props.route.params.weight,
     rate: this.props.route.params.rate,
     less_on_cash: this.props.route.params.less_on_cash,
@@ -40,10 +43,50 @@ class EditAd extends React.Component {
     date: new Date().toString().slice(4, 15),
   };
 
-  editPost = () => {
+  editPost = async () => {
     // edit the post here
 
     console.log(this.state);
+    const body = JSON.stringify({
+      id: this.state.id,
+      user_id: await AsyncStorage.getItem('user_id'),
+      category_id: 0,
+      weight: this.state.weight,
+      type: this.state.type,
+      rate: this.state.rate,
+      less_on_cash: this.state.lessOnCash,
+      address: this.state.address,
+      phone_no: this.state.number,
+      location: this.state.location,
+      like: 'asdad',
+      view: 'asdad',
+      date: this.state.date,
+      images: 'm2.jpg',
+    });
+    // alert('dsads');
+    axios({
+      method: 'post',
+      url: 'https://www.pakpoultryhub.com/api/boiler_edit_submit.php',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        console.log(response.data);
+        // alert('suxxe');
+        //handle success
+        // alert('success');
+        // console.log(response.data);
+        alert('Post edit Successfully');
+        // await AsyncStorage.setItem('token', response.data.token);
+        this.props.navigation.navigate('myAds');
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
   };
 
   render() {

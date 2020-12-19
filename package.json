@@ -34,6 +34,7 @@
     "react-native-svg-charts": "^5.4.0",
     "react-native-swiper": "^1.6.0",
     "react-native-video": "^5.1.0-alpha8",
+    "react-navigation": "^4.4.3",
     "react-redux": "^7.2.1",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",

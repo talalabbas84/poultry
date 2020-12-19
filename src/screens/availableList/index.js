@@ -24,6 +24,7 @@ import {
 } from '../../constants/images';
 import AppStyles from '../../styles';
 import Button from '../../components/button';
+import axios from 'axios';
 
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
@@ -32,23 +33,60 @@ class Home extends React.Component {
     from: '',
     route: '',
     header: '',
+    broilerData: [],
+    city: [],
   };
 
   componentDidMount() {
+    this.props.navigation.addListener('focus', () => {
+      this.getData();
+    });
     if (this.props.route.params) {
       const from = this.props.route.params.from;
       this.setState({header: from});
     }
+    this.getData();
   }
 
-  state = {
-    data: [
-      {title: 'AD # 1', image: chicken, route: 'Rates', like: false},
-      {title: 'AD # 2', image: eggs, like: false},
-      {title: 'AD # 2', image: tag, like: false},
-      {title: 'AD # 3', image: chick, like: false},
-    ],
+  getData = async () => {
+    // alert('ds');
+    try {
+      const res = await axios.get(
+        `https://www.pakpoultryhub.com/api/boiler_fetch.php`,
+      );
+      const res2 = await axios.get(
+        `https://www.pakpoultryhub.com/api/city.php`,
+      );
+      // console.log(res.data);
+      this.setState({...this.setState, broilerData: res.data});
+      this.setState({...this.setState, city: res2.data});
+      // alert('success');
+    } catch (err) {
+      // alert(err.message);
+    }
   };
+
+  getCityName = (city_id) => {
+    // alert('hi');
+    let city_name = '';
+    this.state.city.map((city) => {
+      if (city.id == city_id) {
+        // alert('ds');
+        city_name = city.city_name;
+      }
+    });
+    // alert(city_name);
+    return city_name;
+  };
+
+  // state = {
+  //   data: [
+  //     {title: 'AD # 1', image: chicken, route: 'Rates', like: false},
+  //     {title: 'AD # 2', image: eggs, like: false},
+  //     {title: 'AD # 2', image: tag, like: false},
+  //     {title: 'AD # 3', image: chick, like: false},
+  //   ],
+  // };
 
   changeLikeIcon = (index) => {
     //alert(index)
@@ -66,6 +104,7 @@ class Home extends React.Component {
     this.setState({data});
   };
   renderItem = ({item, index}) => {
+    console.log(item, index);
     return (
       <Card style={styles.card}>
         <View
@@ -90,23 +129,25 @@ class Home extends React.Component {
 
               <View style={styles.row}>
                 <Text>قسم</Text>
-                <Text style={styles.blackText}>قسم</Text>
+                <Text style={styles.blackText}>{item.type}</Text>
               </View>
             </View>
 
             <View>
               <View style={styles.row}>
                 <Text>وزن</Text>
-                <Text style={styles.blackText}>وزن</Text>
+                <Text style={styles.blackText}>{item.weight}</Text>
               </View>
 
               <View style={styles.row}>
                 <Text>شہر </Text>
-                <Text style={styles.blackText}>شہر</Text>
+                <Text style={styles.blackText}>
+                  {this.getCityName(item.city_id)}
+                </Text>
               </View>
               <View style={styles.row}>
                 <Text>فارم پتہ</Text>
-                <Text style={styles.blackText}>فارم پتہ</Text>
+                <Text style={styles.blackText}>{item.address}</Text>
               </View>
 
               <View style={styles.row}>
@@ -142,7 +183,8 @@ class Home extends React.Component {
 
   render() {
     const {from, route, header} = this.state;
-    return (
+    console.log(this.state.city, 'cityyyyyyyyyyyyyyyyy');
+    return this.state.city.length > 0 ? (
       <View style={{flex: 1, backgroundColor: colors.backColor}}>
         <Header title={header} back navigation={this.props.navigation} />
 
@@ -151,7 +193,7 @@ class Home extends React.Component {
         <FlatList
           showsVerticalScrollIndicator={false}
           style={styles.FlatListStyles}
-          data={this.state.data}
+          data={this.state.broilerData}
           renderItem={this.renderItem}
           keyExtractor={(key, index) => index.toString()}
         />
@@ -166,7 +208,7 @@ class Home extends React.Component {
           <Text style={styles.title}>CREATE NEW POST</Text>
         </TouchableOpacity>
       </View>
-    );
+    ) : null;
   }
 }
 export default Home;

@@ -23,8 +23,11 @@ import {
 } from '../../../constants/images';
 import AppStyles from '../../../appStyles/styles';
 import {Card} from 'native-base';
+import AsyncStorage from '@react-native-community/async-storage';
+import axios from 'axios';
 
 class Create extends React.Component {
+  userId;
   state = {
     from: '',
 
@@ -37,12 +40,12 @@ class Create extends React.Component {
     showPhone: true,
     showGrade: false,
 
-    user_id: -1,
-    category_id: -1, // TODO: check id
-    city_id: -1,
-    weight: -1,
-    type: -1,
-    rate: -1,
+    user_id: null,
+    category_id: 1, // TODO: check id
+    city_id: null,
+    weight: null,
+    type: null,
+    rate: null,
     lessOnCash: '',
     address: '',
     number: '',
@@ -51,6 +54,8 @@ class Create extends React.Component {
     name: '',
     images: '',
     view: '',
+    city_name: '',
+    city: [],
   };
 
   // user_id, category_id, city_id, weight, type, rate, less_on_cash, address,
@@ -62,16 +67,108 @@ class Create extends React.Component {
     const category_id = 0;
     const city_id = 1;
 
-    this.setState({...this.state, user_id, category_id, city_id});
+    // this.setState({...this.state, user_id, category_id, city_id});
+    // AsyncStorage.getItem;
+    this.getUserid();
   }
+  getUserid = async function name(params) {
+    this.setState({
+      user_id: await AsyncStorage.getItem('user_id'),
+    });
+  };
+
+  componentDidMount() {
+    this.getData();
+  }
+  getData = async () => {
+    // alert('ds');
+    try {
+      const res2 = await axios.get(
+        `https://www.pakpoultryhub.com/api/city.php`,
+      );
+      // console.log(res.data);
+
+      this.setState({...this.setState, city: res2.data});
+      // alert('success');
+    } catch (err) {
+      // alert(err.message);
+    }
+  };
 
   createPost = () => {
-    console.log(this.state);
+    // console.log(this.state);
+
+    // const body = JSON.stringify({name, number});
+    console.log(this.state.weight, 'weighttttt');
+    console.log(this.state.type, 'typee');
+    console.log(this.state.city[0].id, 'rateee');
+
+    const body = JSON.stringify({
+      user_id: this.state.user_id,
+      category_id: this.state.category_id,
+      city_id: this.state.city_id ? this.state.city_id : this.state.city[0].id,
+      weight: this.state.weight,
+      type: this.state.type,
+      rate: this.state.rate,
+      less_on_cash: this.state.lessOnCash,
+      address: this.state.address,
+      phone_no: this.state.number,
+      location: this.state.location,
+      like: 'asdad',
+      view: 'asdad',
+      date: this.state.date,
+      images: 'm2.jpg',
+    });
+    // alert('dsads');
+    axios({
+      method: 'post',
+      url: 'https://www.pakpoultryhub.com/api/boiler_post.php',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        // alert('suxxe');
+        //handle success
+        // alert('success');
+        // console.log(response.data);
+        // this.setState({
+        //   ...this.setState,
+
+        //   city_id: null,
+        //   weight: null,
+        //   type: null,
+        //   rate: null,
+        //   lessOnCash: '',
+        //   address: '',
+        //   number: '',
+        //   location: '',
+        //   date: new Date().toString().slice(4, 15),
+        //   name: '',
+        //   images: '',
+        //   view: '',
+        //   city_name: '',
+        //   city: [],
+        // });
+        alert('Post added Successfully');
+        // await AsyncStorage.setItem('token', response.data.token);
+        this.props.navigation.navigate('Available');
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
 
     // all varaiables are here, just trim the date
   };
 
   render() {
+    // alert('dss');
+    // alert(this.state.user_id);
+    // alert(this.state.city_name);
+    // console.log(this.state.city_name, 'cityyyyyyyyyyy nameeeeeeeeee');
     const {
       showWeight,
       showType,
@@ -85,7 +182,7 @@ class Create extends React.Component {
       selectedGender,
       selectedCity,
     } = this.state;
-    return (
+    return this.state.city && this.state.city.length > 0 ? (
       <View>
         <ScrollView>
           <Header back navigation={this.props.navigation} title="Broiler Add" />
@@ -117,15 +214,17 @@ class Create extends React.Component {
             </Text>
             <Card style={AppStyles.pickerBack}>
               <Picker
-                selectedValue={selectedCity}
+                selectedValue={this.state.city_id}
                 style={AppStyles.picker}
                 onValueChange={(itemValue, itemIndex) =>
-                  this.setState({...this.state, location: itemValue})
+                  this.setState({...this.state, city_id: itemValue})
                 }>
-                <Picker.Item label="کراچی" value="کراچی" />
-                <Picker.Item label="لاہور" value="لاہور" />
+                {this.state.city.map((city) => (
+                  <Picker.Item label={city.city_name} value={city.id} />
+                ))}
+                {/* <Picker.Item label="لاہور" value="لاہور" />
                 <Picker.Item label="اسلام آباد" value="اسلام آباد" />
-                <Picker.Item label="سیالکوٹ" value="سیالکوٹ" />
+                <Picker.Item label="سیالکوٹ" value="سیالکوٹ" /> */}
               </Picker>
             </Card>
           </View>
@@ -244,7 +343,7 @@ class Create extends React.Component {
           <Button red title="پوسٹ" onPress={() => this.createPost()} />
         </ScrollView>
       </View>
-    );
+    ) : null;
   }
 }
 

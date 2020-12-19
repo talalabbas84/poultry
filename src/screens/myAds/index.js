@@ -10,9 +10,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Header from '../../components/header';
+// import {NavigationEvents} from 'react-navigation';
 import colors from '../../constants/colors';
 import {eggs, chick, chicken, tag, like, unlike} from '../../constants/images';
 import AppStyles from '../../styles';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
@@ -34,6 +37,7 @@ class Home extends React.Component {
         location: 'Karachi',
         address: 'Clifton Block 7 ',
       },
+
       {
         id: 2,
         title: 'AD # 2',
@@ -50,6 +54,95 @@ class Home extends React.Component {
         address: 'Sector 1/2 ',
       },
     ],
+    bool: true,
+    broilerData: [],
+    city: [],
+  };
+  componentDidMount() {
+    this.props.navigation.addListener('focus', () => {
+      this.getData();
+    });
+    // alert('ds');
+    // this.focusListener = this.props.navigation.addListener('didFocus', () => {
+    //   alert('dssd');
+    //   this.getData();
+    // });
+    this.getData();
+  }
+  // componentWillUnmount() {
+  //   this.focusListener.remove();
+  // }
+  componentDidUpdate(prevProps, prevState) {
+    // console.log(prevProps);
+    if (prevState.bool !== this.state.bool) {
+      this.getData();
+    }
+  }
+
+  getData = async () => {
+    // alert('ds');
+    try {
+      const res = await axios.get(
+        `https://www.pakpoultryhub.com/api/boiler_category_by_user.php?user_id=${await AsyncStorage.getItem(
+          'user_id',
+        )}`,
+      );
+      const res2 = await axios.get(
+        `https://www.pakpoultryhub.com/api/city.php`,
+      );
+      console.log(res.data);
+      this.setState({...this.setState, broilerData: res.data});
+      this.setState({...this.setState, city: res2.data});
+      // this.setState({})
+      // alert('success');
+    } catch (err) {
+      // alert(err.message);
+    }
+  };
+
+  getCityName = (city_id) => {
+    // alert('hi');
+    let city_name = '';
+    this.state.city.map((city) => {
+      if (city.id == city_id) {
+        city_name = city.city_name;
+      }
+    });
+    return city_name;
+  };
+
+  deleteHandler = async (id) => {
+    const body = JSON.stringify({
+      post_id: id,
+      user_id: await AsyncStorage.getItem('user_id'),
+    });
+    console.log(body);
+    this.setState({...this.setState, bool: true});
+    // alert('dsads');
+    axios({
+      method: 'post',
+      url: 'https://www.pakpoultryhub.com/api/boiler_delete.php',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        console.log(response.data);
+        // alert('suxxe');
+        //handle success
+        // alert('success');
+        // console.log(response.data);
+        alert('Post deleted Successfully');
+        // await AsyncStorage.setItem('token', response.data.token);
+        // this.props.navigation.navigate('myAds');
+        this.setState({...this.setState, bool: false});
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
   };
 
   navigateToEdit = (
@@ -73,6 +166,9 @@ class Home extends React.Component {
   };
 
   renderItem = ({item, index}) => {
+    // params = this.props.route.count;
+    // console.log(his.props.route);
+    console.log(item);
     return (
       <Card style={styles.card}>
         <View
@@ -154,7 +250,7 @@ class Home extends React.Component {
 
               <View style={styles.row}>
                 <Text>Location</Text>
-                <Text style={styles.blackText}>Rome</Text>
+                <Text style={styles.blackText}>{item.location}</Text>
               </View>
             </View>
           </View>
@@ -177,7 +273,7 @@ class Home extends React.Component {
 
           <View style={styles.line} />
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => this.deleteHandler(item.id)}>
             <Text style={styles.redtext}>DELETE</Text>
           </TouchableOpacity>
         </View>
@@ -188,13 +284,17 @@ class Home extends React.Component {
   render() {
     return (
       <View style={{flex: 1, backgroundColor: colors.backColor}}>
+        {/* <NavigationEvents
+          onDidFocus={this.getData()}
+          onWillFocus={() => this.getData()}
+        /> */}
         <Header title="میرے اشتھارات" navigation={this.props.navigation} />
 
         <Text style={styles.title}>Broiler Ads </Text>
         <FlatList
           showsVerticalScrollIndicator={false}
           style={styles.FlatListStyles}
-          data={this.state.data}
+          data={this.state.broilerData}
           renderItem={this.renderItem}
           keyExtractor={(key, index) => index.toString()}
         />

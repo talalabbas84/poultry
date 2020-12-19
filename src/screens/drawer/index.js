@@ -12,6 +12,9 @@ import AppStyle from '../../styles';
 import {profile} from '../../constants/images';
 
 class Drawer extends React.Component {
+  state = {
+    count: 0,
+  };
   routeTo = (path) => {
     this.props.navigation.closeDrawer();
     this.props.navigation.navigate(path);
