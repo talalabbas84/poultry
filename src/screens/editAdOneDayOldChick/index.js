@@ -13,6 +13,8 @@ import Header from '../../components/header';
 import CustomTextInput from '../../components/textInput';
 import colors from '../../constants/colors';
 import Button from '../../components/button';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import {
   phone,
@@ -26,27 +28,90 @@ import {
 import {Card} from 'native-base';
 import AppStyles from '../../appStyles/styles';
 class EditAd extends React.Component {
-  route;
-
   params = this.props.route.params;
   state = {
+    id: this.props.route.params.id,
     weight: this.props.route.params.weight,
-    rate: this.props.route.params.rate,
-    less_on_cash: this.props.route.params.less_on_cash,
+    view: this.props.route.params.view,
+    like: this.props.route.params.like,
+    sub_cateogory_id: this.props.route.params.sub_cateogory_id,
     address: this.props.route.params.address,
     number: this.props.route.params.number,
     location: this.props.route.params.location,
     type: this.props.route.params.type,
+    date: new Date().toString().slice(4, 15),
+    city_id: this.props.route.params.city_id,
+    city: [],
   };
 
-  editPost = () => {
+  componentDidMount() {
+    this.getData();
+  }
+  getData = async () => {
+    // alert('ds');
+    try {
+      const res2 = await axios.get(
+        `https://www.pakpoultryhub.com/api/city.php`,
+      );
+      // console.log(res.data);
+
+      this.setState({...this.setState, city: res2.data});
+      // alert('success');
+      console.log(res2.data);
+    } catch (err) {
+      // alert(err.message);
+    }
+  };
+
+  editPost = async () => {
     // edit the post here
 
+    console.log('---------');
     console.log(this.state);
+    const body = JSON.stringify({
+      id: this.state.id,
+      user_id: await AsyncStorage.getItem('user_id'),
+      sub_category_id: this.state.sub_cateogory_id,
+      category_id: 0,
+      weight: this.state.weight,
+      like: this.state.like,
+      view: this.state.view,
+      enter_grade: this.state.enter_grade,
+      address: this.state.address,
+      phone_no: this.state.number,
+      location: this.state.location,
+      date: this.state.date,
+      images: 'm2.jpg',
+      city_id: this.state.city_id,
+    });
+
+    axios({
+      method: 'post',
+      url: 'https://www.pakpoultryhub.com/api/odoc_edit_submit.php',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        console.log(response.data);
+        // alert('suxxe');
+        //handle success
+        // alert('success');
+        // console.log(response.data);
+        alert('Post edit Successfully');
+        // await AsyncStorage.setItem('token', response.data.token);
+        this.props.navigation.navigate('myAdsOneDayOldChick');
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
   };
 
   render() {
-    return (
+    return this.state.city && this.state.city.length > 0 ? (
       <View>
         <Header
           back
@@ -71,36 +136,13 @@ class EditAd extends React.Component {
             value={'' + this.state.weight}
           />
 
-          <Text style={styles.header}> Type </Text>
+          <Text style={styles.header}> Grade </Text>
           <CustomTextInput
-            onChangeText={(e) => this.setState({...this.state, type: e})}
+            onChangeText={(e) => this.setState({...this.state, grade: e})}
             length={5}
             image={circle}
             placeholder="Type"
-            value={'' + this.state.type}
-          />
-
-          <Text style={styles.header}> Rate </Text>
-          <CustomTextInput
-            onChangeText={(e) => this.setState({...this.state, rate: e})}
-            length={5}
-            image={circle}
-            keyboardType="numeric"
-            placeholder="Rate"
-            value={'' + this.state.rate}
-          />
-
-          <Text style={styles.header}> Less on cash </Text>
-
-          <CustomTextInput
-            onChangeText={(e) =>
-              this.setState({...this.state, less_on_cash: e})
-            }
-            length={11}
-            image={circle}
-            keyboardType="numeric"
-            placeholder="less"
-            value={this.state.less_on_cash + ''}
+            value={'' + this.state.grade}
           />
 
           <Text style={styles.header}> Address </Text>
@@ -126,13 +168,16 @@ class EditAd extends React.Component {
 
           <Text style={styles.header}> Location </Text>
 
-          <CustomTextInput
-            value={this.state.location}
-            onChangeText={(e) => this.setState({...this.state, location: e})}
-            length={20}
-            image={circle}
-            placeholder="Location"
-          />
+          <Picker
+            selectedValue={this.state.city_id}
+            style={AppStyles.picker}
+            onValueChange={(itemValue, itemIndex) =>
+              this.setState({...this.state, city_id: itemValue})
+            }>
+            {this.state.city.map((city) => (
+              <Picker.Item label={city.city_name} value={city.id} />
+            ))}
+          </Picker>
 
           <View style={{marginBottom: 50, marginTop: 20}}>
             <Button
@@ -146,7 +191,7 @@ class EditAd extends React.Component {
           <View style={{margin: 10}} />
         </ScrollView>
       </View>
-    );
+    ) : null;
   }
 }
 

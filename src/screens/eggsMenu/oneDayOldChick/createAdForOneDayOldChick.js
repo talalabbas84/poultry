@@ -23,6 +23,8 @@ import {
 } from '../../../constants/images';
 import {Card} from 'native-base';
 import AppStyles from '../../../appStyles/styles';
+import AsyncStorage from '@react-native-community/async-storage';
+import axios from 'axios';
 
 class oneDayOldChick extends React.Component {
   state = {
@@ -36,15 +38,14 @@ class oneDayOldChick extends React.Component {
     showCity: true,
     showPhone: true,
     showGrade: true,
-
+    subCategory: this.props.route.params.subCategory,
     nasal: '',
 
-    user_id: -1,
-    category_id: -1, // TODO: check id
-    city_id: -1,
-    weight: -1,
-    type: -1,
-    rate: -1,
+    user_id: null,
+    category_id: '3', // TODO: check id
+    city_id: null,
+    weight: null,
+    type: null,
     grade: '',
     lessOnCash: '',
     address: '',
@@ -54,27 +55,92 @@ class oneDayOldChick extends React.Component {
     images: '',
     view: '',
     like: '',
+    enter_grade: null,
   };
 
   constructor(props) {
     super(props);
-    const user_id = '1';
-    const category_id = '0';
-    const sub_category_id = '3';
-    const city_id = '1';
 
-    this.setState({
-      ...this.state,
-      user_id: user_id,
-      category_id: category_id,
-      city_id: city_id,
-      sub_category_id: sub_category_id,
-    });
+    this.getUserid();
   }
-  createPost = () => {
-    console.log(this.state);
 
-    // generate an id? since it is needed for every post ig
+  getUserid = async function name(params) {
+    this.setState({
+      user_id: await AsyncStorage.getItem('user_id'),
+    });
+  };
+
+  componentDidMount() {
+    this.getData();
+  }
+
+  getData = async () => {
+    try {
+      const res2 = await axios.get(
+        `https://www.pakpoultryhub.com/api/city.php`,
+      );
+      // console.log(res.data);
+
+      this.setState({...this.setState, city: res2.data});
+      // alert('success');
+    } catch (err) {
+      // alert(err.message);
+    }
+  };
+
+  createPost = () => {
+    alert('hello');
+
+    console.log(this.state.subCategory);
+    console.log(this.props.route.params);
+    const body = JSON.stringify({
+      user_id: this.state.user_id,
+      category_id: this.state.category_id,
+      sub_category_id: this.state.subCategory,
+      city_id: this.state.city_id ? this.state.city_id : this.state.city[0].id,
+      enter_grade: this.state.enter_grade,
+      weight: this.state.weight,
+      type: this.state.type,
+      address: this.state.address,
+      phone_no: this.state.number,
+      location: this.state.location,
+      like: 'asdad',
+      view: 'asdad',
+      date: this.state.date,
+    });
+
+    console.log(body);
+
+    axios({
+      method: 'post',
+      url: 'https://www.pakpoultryhub.com/api/boiler_post.php',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        console.log(response.data);
+        this.setState({
+          ...this.state,
+          weight: null,
+          type: null,
+          enter_grade: null,
+          less_on_cash: '',
+          address: '',
+          phone_no: '',
+          location: '',
+        });
+        alert('Post added Successfully');
+        this.props.navigation.navigate('OneDayOldChickShowAdd');
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
+
+    // all varaiables are here, just trim the date
   };
 
   render() {
@@ -93,28 +159,11 @@ class oneDayOldChick extends React.Component {
         <ScrollView>
           <Header back navigation={this.props.navigation} title="CREATE POST" />
 
-          <View>
-            <Text style={styles.text}>انڈے کی نسل درج کریں</Text>
-            <Card style={AppStyles.pickerBack}>
-              <Picker
-                selectedValue={this.state.nasal}
-                style={AppStyles.picker}
-                onValueChange={(itemValue, itemIndex) =>
-                  this.setState({...this.state, nasal: itemValue})
-                }>
-                <Picker.Item label="گولڈن مصری" value=" گولڈن مصری" />
-                <Picker.Item label="ہائی لائن" value="ہائی لائن" />
-                <Picker.Item label="اسڑالورپ" value="اسڑالورپ" />
-                <Picker.Item label="آر آئی آر" value="آر آئی آر " />
-                <Picker.Item label="اصل" value="اصل" />
-              </Picker>
-            </Card>
-          </View>
-
           {showType && (
             <View>
               <Text style={styles.text}>انڈے کا وزن درج کرے</Text>
               <CustomTextInput
+                keyboardType="numeric"
                 image={circle}
                 onChangeText={(e) => this.setState({...this.state, weight: e})}
                 placeholder="فریش/کیج"
@@ -152,10 +201,23 @@ class oneDayOldChick extends React.Component {
             </View>
           )}
 
+          <View>
+            <Text style={styles.text}>grade</Text>
+            <CustomTextInput
+              keyboardType="numeric"
+              onChangeText={(e) =>
+                this.setState({...this.state, enter_grade: e})
+              }
+              image={marker}
+              placeholder="درج کرے"
+            />
+          </View>
+
           {showAddress && (
             <View>
               <Text style={styles.text}> درج کریم likes </Text>
               <CustomTextInput
+                keyboardType="numeric"
                 onChangeText={(e) => this.setState({...this.state, like: e})}
                 image={marker}
                 placeholder="درج کرے"

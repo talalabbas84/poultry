@@ -52,8 +52,8 @@ class Home extends React.Component {
           style={styles.mainView}>
           <Card style={[styles.card, {elevation: 10}]}>
             <View style={{flexDirection: 'row'}}>
-              <Image source={hen} style={styles.card1}></Image>
-              <Image source={eggs1} style={styles.card1}></Image>
+              <Image source={hen} style={styles.card1} />
+              <Image source={eggs1} style={styles.card1} />
             </View>
           </Card>
           <Text style={styles.text}>{item.title}</Text>
@@ -65,7 +65,7 @@ class Home extends React.Component {
         onPress={() => this.props.navigation.navigate(item.route)}
         style={styles.mainView}>
         <Card style={[styles.card, {elevation: 10}]}>
-          <Image source={item.image} style={styles.card}></Image>
+          <Image source={item.image} style={styles.card} />
         </Card>
         <Text style={styles.text}>{item.urdutitle}</Text>
       </TouchableOpacity>
@@ -73,7 +73,6 @@ class Home extends React.Component {
   };
 
   render() {
-    alert('dssd');
     return (
       <View style={{flex: 1, backgroundColor: colors.backColor}}>
         <Header title="میرے اشتھارات" navigation={this.props.navigation} />

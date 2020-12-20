@@ -39,21 +39,22 @@ class Create extends React.Component {
     selectedNasal: '',
     selectedCity: '',
 
-    id: '',
-    user_id: '',
-    category_id: '',
-    city_id: '',
-    weight: '',
-    type: '',
-    rate_per_pati: '',
-    enter_grade: '',
+    user_id: null,
+    category_id: 1, // TODO: check id
+    city_id: null,
+    weight: null,
+    type: null,
+    rate: null,
+    lessOnCash: '',
     address: '',
     number: '',
     location: '',
     date: new Date().toString().slice(4, 15),
-    nasal: '',
+    name: '',
     images: '',
-    grade: '',
+    view: '',
+    city_name: '',
+    city: [],
   };
 
   constructor(props) {

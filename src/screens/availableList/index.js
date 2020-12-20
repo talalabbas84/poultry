@@ -183,7 +183,6 @@ class Home extends React.Component {
 
   render() {
     const {from, route, header} = this.state;
-    console.log(this.state.city, 'cityyyyyyyyyyyyyyyyy');
     return this.state.city.length > 0 ? (
       <View style={{flex: 1, backgroundColor: colors.backColor}}>
         <Header title={header} back navigation={this.props.navigation} />

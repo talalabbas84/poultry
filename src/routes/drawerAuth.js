@@ -53,12 +53,13 @@ import myAds from '../screens/myAds';
 import myAdsGoldenMisri from '../screens/myAdsGoldenMishri/';
 import myAdEgg from '../screens/myAdsEgg';
 import myAdsOneDayOldChick from '../screens/myAdsOneDayOldChick';
+import OneDayOldChickShowAdd from '../screens/OneDayOldChickAddShow';
 const Stack = createDrawerNavigator();
 
 const DrawerStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="allAds"
+      initialRouteName="Home"
       drawerContent={(props) => <SideDrawer {...props} />}
       screenOptions={{headerShown: false}}>
       <Stack.Screen name="Home" component={Home} />
@@ -101,6 +102,11 @@ const DrawerStack = () => {
       <Stack.Screen name="ChicksForBroiler" component={ChicksForBroiler} />
       <Stack.Screen name="GoldenMisriAdd" component={GoldenMisriAdd} />
       <Stack.Screen name="GolderMisiShowAdd" component={GolderMisiShowAdd} />
+      <Stack.Screen
+        name="OneDayOldChickShowAdd"
+        component={OneDayOldChickShowAdd}
+      />
+
       <Stack.Screen name="EggsLayerAdd" component={EggsLayerAdd} />
       <Stack.Screen
         name="CreateAddForEggLayer"
