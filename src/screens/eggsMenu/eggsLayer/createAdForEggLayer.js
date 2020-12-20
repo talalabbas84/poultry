@@ -23,6 +23,8 @@ import {
 } from '../../../constants/images';
 import {Card} from 'native-base';
 import AppStyles from '../../../appStyles/styles';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Create extends React.Component {
   state = {
@@ -40,7 +42,8 @@ class Create extends React.Component {
     selectedCity: '',
 
     user_id: null,
-    category_id: 1, // TODO: check id
+    category_id: 3, // TODO: check id
+    sub_category_id: 1,
     city_id: null,
     weight: null,
     type: null,
@@ -55,24 +58,81 @@ class Create extends React.Component {
     view: '',
     city_name: '',
     city: [],
+    grade: '',
   };
 
   constructor(props) {
     super(props);
-    const user_id = 1;
-    const category_id = 3;
-    const city_id = 1;
 
-    this.setState({
-      ...this.state,
-      user_id: user_id,
-      category_id: category_id,
-      city_id: city_id,
-    });
+    this.getUserid();
   }
+  getUserid = async function name(params) {
+    this.setState({
+      user_id: await AsyncStorage.getItem('user_id'),
+    });
+  };
+  componentDidMount() {
+    this.getData();
+  }
+  getData = async () => {
+    try {
+      const res2 = await axios.get(
+        `https://www.pakpoultryhub.com/api/city.php`,
+      );
+      // console.log(res.data);
+
+      this.setState({...this.setState, city: res2.data});
+      // alert('success');
+    } catch (err) {
+      // alert(err.message);
+    }
+  };
 
   createPost = () => {
     console.log(this.state);
+    const body = JSON.stringify({
+      user_id: this.state.user_id,
+      category_id: this.state.category_id,
+      sub_category_id: this.state.sub_category_id,
+      city_id: this.state.city_id ? this.state.city_id : this.state.city[0].id,
+      weight: this.state.weight,
+      type: this.state.type,
+      rate_per_pati: this.state.rate,
+      enter_grade: this.state.grade,
+      address: this.state.address,
+      phone_no: this.state.number,
+
+      date: this.state.date,
+    });
+    // alert('dsads');
+    axios({
+      method: 'post',
+      url: 'https://www.pakpoultryhub.com/api/egg_post.php',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        console.log(response.data);
+        this.setState({
+          ...this.state,
+          weight: null,
+          type: null,
+          rate: null,
+          grade: '',
+          address: '',
+          phone_no: '',
+          location: '',
+        });
+        alert('Post added Successfully');
+        this.props.navigation.navigate('EggsLayerAdd');
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
 
     // generate an id? since it is needed for every post ig
   };
@@ -90,7 +150,7 @@ class Create extends React.Component {
       selectedNasal,
       selectedCity,
     } = this.state;
-    return (
+    return this.state.city && this.state.city.length > 0 ? (
       <View>
         <ScrollView>
           <Header back navigation={this.props.navigation} title="CREATE POST" />
@@ -128,9 +188,7 @@ class Create extends React.Component {
               <CustomTextInput
                 keyboardType="numeric"
                 image={circle}
-                onChangeText={(e) =>
-                  this.setState({...this.state, rate_per_pati: e})
-                }
+                onChangeText={(e) => this.setState({...this.state, rate: e})}
                 placeholder="Enter Rate"
               />
             </View>
@@ -142,15 +200,14 @@ class Create extends React.Component {
             </Text>
             <Card style={AppStyles.pickerBack}>
               <Picker
-                selectedValue={selectedCity}
+                selectedValue={this.state.city_id}
                 style={AppStyles.picker}
                 onValueChange={(itemValue, itemIndex) =>
-                  this.setState({...this.state, location: itemValue})
+                  this.setState({...this.state, city_id: itemValue})
                 }>
-                <Picker.Item label="کراچی" value="کراچی" />
-                <Picker.Item label="لاہور" value="لاہور" />
-                <Picker.Item label="اسلام آباد" value="اسلام آباد" />
-                <Picker.Item label="سیالکوٹ" value="سیالکوٹ" />
+                {this.state.city.map((city) => (
+                  <Picker.Item label={city.city_name} value={city.id} />
+                ))}
               </Picker>
             </Card>
           </View>
@@ -213,7 +270,7 @@ class Create extends React.Component {
           <Button red title="CREATE NEW POST" onPress={this.createPost} />
         </ScrollView>
       </View>
-    );
+    ) : null;
   }
 }
 

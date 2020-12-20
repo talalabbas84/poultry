@@ -38,11 +38,12 @@ class Create extends React.Component {
     showCity: true,
     showPhone: true,
     showGrade: true,
-
-    nasal: '',
+    selectedNasal: '',
+    selectedCity: '',
 
     user_id: null,
-    category_id: 1, // TODO: check id
+    category_id: 3, // TODO: check id
+    sub_category_id: 1,
     city_id: null,
     weight: null,
     type: null,
@@ -57,22 +58,19 @@ class Create extends React.Component {
     view: '',
     city_name: '',
     city: [],
+    grade: '',
   };
 
   constructor(props) {
     super(props);
-    //  Check this if we need subcategory id
-    const sub_category_id = 3;
 
     this.getUserid();
   }
-
   getUserid = async function name(params) {
     this.setState({
       user_id: await AsyncStorage.getItem('user_id'),
     });
   };
-
   componentDidMount() {
     this.getData();
   }
@@ -82,6 +80,7 @@ class Create extends React.Component {
         `https://www.pakpoultryhub.com/api/city.php`,
       );
       // console.log(res.data);
+
       this.setState({...this.setState, city: res2.data});
       // alert('success');
     } catch (err) {
@@ -90,56 +89,55 @@ class Create extends React.Component {
   };
 
   createPost = () => {
-    alert('ds');
+    console.log(this.state);
     const body = JSON.stringify({
       user_id: this.state.user_id,
       category_id: this.state.category_id,
+      sub_category_id: this.state.sub_category_id,
       city_id: this.state.city_id ? this.state.city_id : this.state.city[0].id,
       weight: this.state.weight,
       type: this.state.type,
-      rate: this.state.rate,
-      less_on_cash: this.state.lessOnCash,
+      rate_per_pati: this.state.rate,
+      enter_grade: this.state.grade,
       address: this.state.address,
       phone_no: this.state.number,
-      location: this.state.location,
-      like: 'asdad',
-      view: 'asdad',
+
       date: this.state.date,
-      images: 'm2.jpg',
     });
     // alert('dsads');
-    console.log(body);
     axios({
       method: 'post',
-      url: 'https://www.pakpoultryhub.com/api/goldenmisri_post.php',
+      url: 'https://www.pakpoultryhub.com/api/egg_post.php',
       data: body,
       headers: {
         'Content-Type': 'application/json',
       },
     })
       .then(async (response) => {
+        console.log(response.data);
         this.setState({
           ...this.state,
           weight: null,
           type: null,
           rate: null,
-          less_on_cash: '',
+          grade: '',
           address: '',
           phone_no: '',
           location: '',
         });
         alert('Post added Successfully');
-        this.props.navigation.navigate('GolderMisiShowAdd');
+        this.props.navigation.navigate('showAddForEggsGolderMisri');
       })
       .catch(function (response) {
         //handle error
         // alert('User already exists');
         console.log(response);
       });
+
+    // generate an id? since it is needed for every post ig
   };
 
   render() {
-    // alert('dssd');
     const {
       showWeight,
       showType,
@@ -149,30 +147,49 @@ class Create extends React.Component {
       showCity,
       showPhone,
       showGrade,
+      selectedNasal,
+      selectedCity,
     } = this.state;
-    return (
+    return this.state.city && this.state.city.length > 0 ? (
       <View>
         <ScrollView>
           <Header back navigation={this.props.navigation} title="CREATE POST" />
 
-          {showType && (
+          <View>
+            <Text style={styles.text}>انڈے کا وزن درج کرے</Text>
+            <CustomTextInput
+              onChangeText={(e) => this.setState({...this.state, weight: e})}
+              image={weight}
+              keyboardType="numeric"
+              placeholder="Type Here"
+            />
+          </View>
+
+          {/* {showType && (
             <View>
-              <Text style={styles.text}>انڈے کا وزن درج کرے</Text>
-              <CustomTextInput
-                image={circle}
-                onChangeText={(e) => this.setState({...this.state, weight: e})}
-                placeholder="فریش/کیج"
-              />
+              <Text style={styles.text}>انڈے کی طرز درج کریں</Text>
+              <Card style={AppStyles.pickerBack}>
+                <Picker
+                  selectedValue={selectedNasal}
+                  style={AppStyles.picker}
+                  onValueChange={(itemValue, itemIndex) =>
+                    this.setState({...this.state, type: itemValue})
+                  }>
+                  <Picker.Item label="فریش" value=" فریش" />
+                  <Picker.Item label="فریش" value="فریش" />
+                </Picker>
+              </Card>
             </View>
-          )}
+          )} */}
 
           {showRate && (
             <View>
-              <Text style={styles.text}>ریٹ فی نگ</Text>
+              <Text style={styles.text}>انڈے کا ریٹ فی پیٹی درج کریں</Text>
               <CustomTextInput
+                keyboardType="numeric"
                 image={circle}
                 onChangeText={(e) => this.setState({...this.state, rate: e})}
-                placeholder="درج کرے"
+                placeholder="Enter Rate"
               />
             </View>
           )}
@@ -195,26 +212,37 @@ class Create extends React.Component {
             </Card>
           </View>
 
-          {showLess && (
+          {showType && (
             <View>
-              <Text style={styles.text}> درج کریں less on cash</Text>
-              <CustomTextInput
-                image={downArrow}
-                placeholder="Enter less(e.g Rs.5)"
-                onChangeText={(e) =>
-                  this.setState({...this.state, lessOnCash: e})
-                }
-              />
+              <Text style={styles.text}>چکس گریڈ درج کریں</Text>
+              <Card style={AppStyles.pickerBack}>
+                <Picker
+                  selectedValue={this.state.nasal}
+                  style={AppStyles.picker}
+                  onValueChange={(itemValue, itemIndex) =>
+                    this.setState({...this.state, grade: itemValue})
+                  }>
+                  <Picker.Item label="سٹارٹر" value=" سٹارٹر" />
+                  <Picker.Item label="A گریڈ" value="A     گریڈ" />
+                  <Picker.Item label=" A++ گریڈ" value="A++ گریڈ" />
+                </Picker>
+              </Card>
             </View>
           )}
+
+          {/* {showLess &&  <View>
+                    <Text style={styles.text}> درج کریں</Text>
+                    <CustomTextInput image={downArrow} placeholder="Enter less(e.g Rs.5)"/>
+
+                </View>} */}
 
           {showAddress && (
             <View>
               <Text style={styles.text}>فارم کا پتہ درج کریں</Text>
               <CustomTextInput
-                onChangeText={(e) => this.setState({...this.state, address: e})}
                 image={marker}
-                placeholder="درج کرے"
+                placeholder="Enter your local address"
+                onChangeText={(e) => this.setState({...this.state, address: e})}
               />
             </View>
           )}
@@ -230,10 +258,19 @@ class Create extends React.Component {
               />
             </View>
           )}
-          <Button red title="پوسٹ" onPress={this.createPost} />
+
+          {/* <Text style={styles.text}>Attach images</Text>
+
+                <TouchableOpacity style={styles.camera}>
+                        <Image source={camera}/>
+                </TouchableOpacity>
+
+                <Text style={[styles.text,{alignSelf:'center',fontSize:12}]}>your post will be deleted automatically after 24 hours</Text> */}
+
+          <Button red title="CREATE NEW POST" onPress={this.createPost} />
         </ScrollView>
       </View>
-    );
+    ) : null;
   }
 }
 

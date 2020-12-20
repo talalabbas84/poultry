@@ -56,6 +56,7 @@ class oneDayOldChick extends React.Component {
     view: '',
     like: '',
     enter_grade: null,
+    city: [],
   };
 
   constructor(props) {
@@ -108,12 +109,13 @@ class oneDayOldChick extends React.Component {
       view: 'asdad',
       date: this.state.date,
     });
+    //www.pakpoultryhub.com/api/odoc_post.php
 
-    console.log(body);
+    https: console.log(body);
 
     axios({
       method: 'post',
-      url: 'https://www.pakpoultryhub.com/api/boiler_post.php',
+      url: 'https://www.pakpoultryhub.com/api/odoc_post.php',
       data: body,
       headers: {
         'Content-Type': 'application/json',
@@ -154,7 +156,7 @@ class oneDayOldChick extends React.Component {
       showPhone,
       showGrade,
     } = this.state;
-    return (
+    return this.state.city && this.state.city.length > 0 ? (
       <View>
         <ScrollView>
           <Header back navigation={this.props.navigation} title="CREATE POST" />
@@ -177,15 +179,14 @@ class oneDayOldChick extends React.Component {
             </Text>
             <Card style={AppStyles.pickerBack}>
               <Picker
-                selectedValue={this.state.location}
+                selectedValue={this.state.city_id}
                 style={AppStyles.picker}
                 onValueChange={(itemValue, itemIndex) =>
-                  this.setState({...this.state, location: itemValue})
+                  this.setState({...this.state, city_id: itemValue})
                 }>
-                <Picker.Item label="کراچی" value="کراچی" />
-                <Picker.Item label="لاہور" value="لاہور" />
-                <Picker.Item label="اسلام آباد" value="اسلام آباد" />
-                <Picker.Item label="سیالکوٹ" value="سیالکوٹ" />
+                {this.state.city.map((city) => (
+                  <Picker.Item label={city.city_name} value={city.id} />
+                ))}
               </Picker>
             </Card>
           </View>
@@ -248,7 +249,7 @@ class oneDayOldChick extends React.Component {
           <Button red title="پوسٹ" onPress={this.createPost} />
         </ScrollView>
       </View>
-    );
+    ) : null;
   }
 }
 
