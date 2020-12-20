@@ -68,6 +68,7 @@ class EditAd extends React.Component {
 
     console.log('---------');
     console.log(this.state);
+
     const body = JSON.stringify({
       id: this.state.id,
       user_id: await AsyncStorage.getItem('user_id'),

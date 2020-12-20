@@ -39,9 +39,11 @@ class Home extends React.Component {
   };
 
   componentDidMount() {
-    console.log(this.props.route.params);
-
     this.props.navigation.addListener('focus', () => {
+      this.setState({
+        ...this.state,
+        subCategory: this.props.route.params.subCategory,
+      });
       this.getData();
     });
     if (this.props.route.params) {
@@ -62,7 +64,14 @@ class Home extends React.Component {
       );
       // console.log(res.data);
 
-      this.setState({...this.setState, odocData: res.data});
+      console.log(res.data);
+
+      console.log(this.state.subCategory);
+      const odocData = res.data.filter(
+        (item) => item.sub_cateogory_id === this.state.subCategory,
+      );
+
+      this.setState({...this.setState, odocData: odocData});
       this.setState({...this.setState, city: res2.data});
       // alert('success');
     } catch (err) {

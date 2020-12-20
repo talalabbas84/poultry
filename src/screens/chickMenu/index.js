@@ -46,6 +46,7 @@ class Home extends React.Component {
     ],
   };
   renderItem = ({item}) => {
+    console.log('The item is ' + item.subCategory);
     return (
       <TouchableOpacity
         onPress={() =>
