@@ -13,6 +13,8 @@ import Header from '../../components/header';
 import colors from '../../constants/colors';
 import {eggs, chick, chicken, tag, like, unlike} from '../../constants/images';
 import AppStyles from '../../styles';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
@@ -21,19 +23,18 @@ class Home extends React.Component {
     data: [
       {
         id: 1,
-        title: 'AD # 2',
-        image: eggs,
+        title: 'AD # 1',
+        image: chicken,
+        route: 'Rates',
         like: false,
-        count: '20 likes',
-        clickedCount: 'post click :#12',
-        number: '02323112233',
-        weight: 23,
+        count: '10 likes',
+        clickedCount: 'post click :#10',
+        weight: 1134,
         type: 'Lorem',
-        rate: 121,
-        less_on_cash: 23123,
+        rate: 1111,
+        less_on_cash: 2122,
         location: 'Karachi',
         address: 'Clifton Block 7 ',
-        view: 'asdad',
       },
       {
         id: 2,
@@ -42,35 +43,127 @@ class Home extends React.Component {
         like: false,
         count: '20 likes',
         clickedCount: 'post click :#12',
-        number: '032320232',
-        weight: 1123,
+
+        weight: 123123,
         type: 'Lorem',
         rate: 121,
         less_on_cash: 222,
         location: 'Lahore',
         address: 'Sector 1/2 ',
-        view: 'asdad',
       },
     ],
+    bool: true,
+    city: [],
+    chickData: [],
+  };
+
+  componentDidMount() {
+    this.props.navigation.addListener('focus', () => {
+      // alert('dss');
+      this.getData();
+      // alert('fddf');
+    });
+    // alert('ds');
+    // this.focusListener = this.props.navigation.addListener('didFocus', () => {
+    //   alert('dssd');
+    //   this.getData();
+    // });
+    this.getData();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // console.log(prevProps);
+    if (prevState.bool !== this.state.bool) {
+      this.getData();
+    }
+  }
+
+  getData = async () => {
+    // alert('ds');
+
+    try {
+      const res = await axios.get(
+        `https://www.pakpoultryhub.com/api/egg_category_by_user.php?user_id=${await AsyncStorage.getItem(
+          'user_id',
+        )}`,
+      );
+      const res2 = await axios.get(
+        `https://www.pakpoultryhub.com/api/city.php`,
+      );
+      // console.log(res.data);
+      this.setState({...this.setState, chickData: res.data});
+      this.setState({...this.setState, city: res2.data});
+
+      console.log(res.data);
+
+      // this.setState({})
+      // alert('success');
+    } catch (err) {
+      // alert(err.message);
+    }
+  };
+
+  getCityName = (city_id) => {
+    // alert('hi');
+    let city_name = '';
+    this.state.city.map((city) => {
+      if (city.id == city_id) {
+        city_name = city.city_name;
+      }
+    });
+    return city_name;
+  };
+
+  deleteHandler = async (id) => {
+    const body = JSON.stringify({
+      post_id: id,
+      user_id: await AsyncStorage.getItem('user_id'),
+    });
+    // console.log(body);
+    this.setState({...this.setState, bool: true});
+    // alert('dsads');
+    axios({
+      method: 'post',
+      url: 'https://www.pakpoultryhub.com/api/odoc_delete.php',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        alert('Post deleted Successfully');
+
+        this.setState({...this.setState, bool: false});
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
   };
 
   navigateToEdit = (
     id,
     weight,
-    rate,
-    type,
-    less_on_cash,
+    enter_grade,
+    like,
+    view,
     location,
     address,
+    city_id,
+    sub_cateogory_id,
   ) => {
-    this.props.navigation.navigate('EditAdEgg', {
+    this.props.navigation.navigate('EditAdOneDayOldChick', {
       id,
       weight,
-      rate,
-      type,
-      less_on_cash,
+      enter_grade,
+      like,
+      view,
+
       location,
       address,
+      city_id,
+      sub_cateogory_id,
     });
   };
 
@@ -78,7 +171,7 @@ class Home extends React.Component {
     return (
       <Card style={styles.card}>
         <View
-          // onPress={()=> this.props.navigation.navirgate(item.route)}
+          // onPress={()=> this.props.navigation.navigate(item.route)}
           style={styles.touchcard}>
           <View style={styles.likeView}>
             <View>
@@ -105,17 +198,13 @@ class Home extends React.Component {
               </View>
 
               <View style={styles.row}>
-                <Text>Type</Text>
-                <Text style={styles.blackText}>{item.type}</Text>
+                <Text>Grade</Text>
+                <Text style={styles.blackText}>{item.enter_grade}</Text>
               </View>
 
               <View style={styles.row}>
-                <Text>rate </Text>
-                <Text style={styles.blackText}>{item.rate}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text>less on cash</Text>
-                <Text style={styles.blackText}>{item.less_on_cash}</Text>
+                <Text>location </Text>
+                <Text style={styles.blackText}>{item.location}</Text>
               </View>
 
               <View style={styles.row}>
@@ -124,8 +213,19 @@ class Home extends React.Component {
               </View>
 
               <View style={styles.row}>
+                <Text>Like</Text>
+                <Text style={styles.blackText}>{item.like}</Text>
+              </View>
+
+              <View style={styles.row}>
+                <Text>View</Text>
+                <Text style={styles.blackText}>{item.view}</Text>
+              </View>
+              <View style={styles.row}>
                 <Text>Location</Text>
-                <Text style={styles.blackText}>{item.location}</Text>
+                <Text style={styles.blackText}>
+                  {this.getCityName(item.city_id)}
+                </Text>
               </View>
             </View>
 
@@ -136,17 +236,13 @@ class Home extends React.Component {
               </View>
 
               <View style={styles.row}>
-                <Text>Type</Text>
-                <Text style={styles.blackText}>{item.type}</Text>
+                <Text>Grade</Text>
+                <Text style={styles.blackText}>{item.enter_grade}</Text>
               </View>
 
               <View style={styles.row}>
-                <Text>rate </Text>
-                <Text style={styles.blackText}>{item.rate}</Text>
-              </View>
-              <View style={styles.row}>
-                <Text>less on cash</Text>
-                <Text style={styles.blackText}>{item.less_on_cash}</Text>
+                <Text>location </Text>
+                <Text style={styles.blackText}>{item.location}</Text>
               </View>
 
               <View style={styles.row}>
@@ -155,8 +251,20 @@ class Home extends React.Component {
               </View>
 
               <View style={styles.row}>
+                <Text>Like</Text>
+                <Text style={styles.blackText}>{item.like}</Text>
+              </View>
+
+              <View style={styles.row}>
+                <Text>View</Text>
+                <Text style={styles.blackText}>{item.view}</Text>
+              </View>
+
+              <View style={styles.row}>
                 <Text>Location</Text>
-                <Text style={styles.blackText}>Rome</Text>
+                <Text style={styles.blackText}>
+                  {this.getCityName(item.city_id)}
+                </Text>
               </View>
             </View>
           </View>
@@ -167,11 +275,13 @@ class Home extends React.Component {
               this.navigateToEdit(
                 item.id,
                 item.weight,
-                item.rate,
-                item.type,
-                item.less_on_cash,
+                item.enter_grade,
+                item.like,
+                item.view,
                 item.location,
                 item.address,
+                item.city_id,
+                item.sub_cateogory_id,
               );
             }}>
             <Text style={styles.redtext}>EDIT </Text>
@@ -179,7 +289,7 @@ class Home extends React.Component {
 
           <View style={styles.line} />
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => this.deleteHandler(item.id)}>
             <Text style={styles.redtext}>DELETE</Text>
           </TouchableOpacity>
         </View>
@@ -188,16 +298,17 @@ class Home extends React.Component {
   };
 
   render() {
+    // alert('dss');
     return (
       <View style={{flex: 1, backgroundColor: colors.backColor}}>
         <Header title="میرے اشتھارات" navigation={this.props.navigation} />
 
-        <Text style={styles.title}>Egg Ads </Text>
+        <Text style={styles.title}>One Day Old Chicks Ads </Text>
 
         <FlatList
           showsVerticalScrollIndicator={false}
           style={styles.FlatListStyles}
-          data={this.state.data}
+          data={this.state.chickData}
           renderItem={this.renderItem}
           keyExtractor={(key, index) => index.toString()}
         />

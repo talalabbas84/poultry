@@ -82,7 +82,7 @@ class Home extends React.Component {
     // alert('ds');
     try {
       const res = await axios.get(
-        `https://www.pakpoultryhub.com/api/boiler_category_by_user.php?user_id=${await AsyncStorage.getItem(
+        `https://www.pakpoultryhub.com/api/odoc_category_by_user.php?user_id=${await AsyncStorage.getItem(
           'user_id',
         )}`,
       );
