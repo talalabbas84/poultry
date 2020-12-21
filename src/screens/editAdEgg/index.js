@@ -25,6 +25,9 @@ import {
 } from '../../constants/images';
 import {Card} from 'native-base';
 import AppStyles from '../../appStyles/styles';
+import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
+
 class EditAd extends React.Component {
   params = this.props.route.params;
   state = {
@@ -35,6 +38,7 @@ class EditAd extends React.Component {
     sub_cateogory_id: this.props.route.params.sub_cateogory_id,
     address: this.props.route.params.address,
     number: this.props.route.params.number,
+    grade: this.props.route.params.enter_grade,
     location: this.props.route.params.location,
     type: this.props.route.params.type,
     date: new Date().toString().slice(4, 15),
@@ -74,7 +78,7 @@ class EditAd extends React.Component {
       weight: this.state.weight,
       like: this.state.like,
       view: this.state.view,
-      enter_grade: this.state.enter_grade,
+      enter_grade: this.state.grade,
       address: this.state.address,
       phone_no: this.state.number,
       location: this.state.location,
@@ -99,7 +103,7 @@ class EditAd extends React.Component {
         // console.log(response.data);
         alert('Post edit Successfully');
         // await AsyncStorage.setItem('token', response.data.token);
-        this.props.navigation.navigate('myAdsEggs');
+        this.props.navigation.navigate('myAdEgg');
       })
       .catch(function (response) {
         //handle error
