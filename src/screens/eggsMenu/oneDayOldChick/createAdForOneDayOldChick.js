@@ -169,6 +169,7 @@ class oneDayOldChick extends React.Component {
                 image={circle}
                 onChangeText={(e) => this.setState({...this.state, weight: e})}
                 placeholder="فریش/کیج"
+                value={this.state.weight}
               />
             </View>
           )}
@@ -198,6 +199,7 @@ class oneDayOldChick extends React.Component {
                 onChangeText={(e) => this.setState({...this.state, address: e})}
                 image={marker}
                 placeholder="درج کرے"
+                value={this.state.address}
               />
             </View>
           )}
@@ -211,6 +213,7 @@ class oneDayOldChick extends React.Component {
               }
               image={marker}
               placeholder="درج کرے"
+              value={this.state.enter_grade}
             />
           </View>
 
@@ -222,6 +225,7 @@ class oneDayOldChick extends React.Component {
                 onChangeText={(e) => this.setState({...this.state, like: e})}
                 image={marker}
                 placeholder="درج کرے"
+                value={this.state.address}
               />
             </View>
           )}
@@ -234,6 +238,7 @@ class oneDayOldChick extends React.Component {
                 image={phone}
                 placeholder="eg.03xxxxxxx"
                 onChangeText={(e) => this.setState({...this.state, number: e})}
+                value={this.state.number}
               />
             </View>
           )}
