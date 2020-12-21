@@ -124,7 +124,7 @@ class Home extends React.Component {
     // alert('dsads');
     axios({
       method: 'post',
-      url: 'https://www.pakpoultryhub.com/api/odoc_delete.php',
+      url: 'https://www.pakpoultryhub.com/api/egg_delete.php',
       data: body,
       headers: {
         'Content-Type': 'application/json',
@@ -153,7 +153,7 @@ class Home extends React.Component {
     city_id,
     sub_cateogory_id,
   ) => {
-    this.props.navigation.navigate('EditAdOneDayOldChick', {
+    this.props.navigation.navigate('EditAdEgg', {
       id,
       weight,
       enter_grade,
@@ -303,7 +303,7 @@ class Home extends React.Component {
       <View style={{flex: 1, backgroundColor: colors.backColor}}>
         <Header title="میرے اشتھارات" navigation={this.props.navigation} />
 
-        <Text style={styles.title}>One Day Old Chicks Ads </Text>
+        <Text style={styles.title}>Eggs </Text>
 
         <FlatList
           showsVerticalScrollIndicator={false}

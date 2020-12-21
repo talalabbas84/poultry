@@ -99,7 +99,7 @@ class EditAd extends React.Component {
         // console.log(response.data);
         alert('Post edit Successfully');
         // await AsyncStorage.setItem('token', response.data.token);
-        this.props.navigation.navigate('myAdsOneDayOldChick');
+        this.props.navigation.navigate('myAdsEggs');
       })
       .catch(function (response) {
         //handle error
@@ -109,6 +109,7 @@ class EditAd extends React.Component {
   };
 
   render() {
+    // alert('dss');
     return this.state.city && this.state.city.length > 0 ? (
       <View>
         <Header
