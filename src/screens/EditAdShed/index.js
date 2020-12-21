@@ -45,7 +45,7 @@ class EditAd extends React.Component {
     rent: this.params.rent,
     price: this.params.price,
     capacity: this.params.capacity,
-    type: '2',
+    type: this.params.type,
     date: this.params.date,
     location: this.params.location,
     phone_no: this.params.phone_no,
@@ -85,8 +85,8 @@ class EditAd extends React.Component {
       rent: this.state.rent,
       price: this.state.price,
       capacity: this.state.capacity,
-      type: '2',
-      phone_no: this.state.number,
+      type: this.state.type,
+      phone_no: this.state.phone_no,
       location: this.state.location,
       like: 'asdad',
       view: 'asdad',
@@ -206,22 +206,9 @@ class EditAd extends React.Component {
               <Text style={styles.text}>فون نمبر درج کریں</Text>
               <CustomTextInput
                 keyboardType="numeric"
-                image={phone}
-                onChangeText={(e) => this.setState({...this.state, number: e})}
+                onChangeText={(e) => this.setState({...this.state, type: e})}
                 placeholder="eg.03xxxxxxx"
-                value={this.state.number}
-              />
-            </View>
-          )}
-
-          {showPhone && (
-            <View>
-              <Text style={styles.text}>Description</Text>
-              <CustomTextInput
-                onChangeText={(e) =>
-                  this.setState({...this.state, description: e})
-                }
-                value={this.state.description}
+                value={this.state.type}
               />
             </View>
           )}
