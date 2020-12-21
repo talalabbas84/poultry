@@ -29,12 +29,19 @@ const WIDTH = Dimensions.get('window').width;
 class Home extends React.Component {
   state = {
     data: [
-      {title1: 'SHED', title: 'شیڈ', image: shed, route: 'AddForLabour'},
+      {
+        title1: 'SHED',
+        title: 'شیڈ',
+        image: shed,
+        route: 'AddForLabour',
+        type: '1',
+      },
       {
         title1: 'RATE',
         title: 'انسان کی طاقت',
         image: rate,
         route: 'AddForLabour',
+        type: '2',
       },
       // {title1:'SHED', title:'ورکرز',image:shed,route:'AddForLabour'},
       // {title1:'RATE', title:'فارمزز',image:rate,route:'AddForFarm'}
@@ -46,6 +53,7 @@ class Home extends React.Component {
         onPress={() =>
           this.props.navigation.navigate(item.route, {
             from: item.title,
+            type: item.type,
           })
         }
         style={styles.mainView}>

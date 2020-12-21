@@ -9,6 +9,8 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import axios from 'axios';
+
 import Header from '../../../components/header';
 import colors from '../../../constants/colors';
 import {
@@ -30,39 +32,16 @@ const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
 class Home extends React.Component {
   state = {
-    from: '',
-    route: '',
-  };
-
-  componentDidMount() {
-    if (this.props.route.params) {
-      const from = this.props.route.params.from;
-      if (from === 'BROILER' || from === 'GOLDEN MISRI') {
-        this.setState({
-          route: 'CreatePost',
-        });
-      } else {
-        this.setState({
-          route: 'AvailableAdd',
-        });
-      }
-    }
-  }
-
-  state = {
-    data: [
-      {title: 'AD # 1', image: chicken, route: 'Rates', like: false},
-      {title: 'AD # 2', image: eggs, like: false},
-      {title: 'AD # 2', image: tag, like: false},
-      {title: 'AD # 3', image: chick, like: false},
-    ],
+    shedData: [],
+    city: [],
+    type: this.props.route.params.type,
   };
 
   componentDidMount() {
     this.props.navigation.addListener('focus', () => {
       this.setState({
         ...this.state,
-        subCategory: this.props.route.params.subCategory,
+        type: this.props.route.params.type,
       });
       this.getData();
     });
@@ -74,10 +53,9 @@ class Home extends React.Component {
   }
 
   getData = async () => {
-    // alert('ds');
     try {
       const res = await axios.get(
-        `https://www.pakpoultryhub.com/api/odoc_fetch.php`,
+        'https://www.pakpoultryhub.com/api/men_power_fetch.php',
       );
       const res2 = await axios.get(
         `https://www.pakpoultryhub.com/api/city.php`,
@@ -86,12 +64,7 @@ class Home extends React.Component {
 
       console.log(res.data);
 
-      console.log(this.state.subCategory);
-      const odocData = res.data.filter(
-        (item) => item.sub_cateogory_id === this.state.subCategory,
-      );
-
-      this.setState({...this.setState, odocData: odocData});
+      this.setState({...this.setState, shedData: res.data});
       this.setState({...this.setState, city: res2.data});
       // alert('success');
     } catch (err) {
@@ -139,7 +112,7 @@ class Home extends React.Component {
           style={styles.touchcard}>
           <View style={styles.likeView}>
             <Text style={styles.text}>{item.title}</Text>
-            <TouchableOpacity onPress={() => this.changeLikeIcon(index)}>
+            <TouchableOpacity>
               <Image
                 style={styles.image}
                 source={item.like ? fav : favourite}
@@ -150,34 +123,50 @@ class Home extends React.Component {
           <View style={styles.row}>
             <View>
               <View style={styles.row}>
-                <Text>مہارت</Text>
-                <Text style={styles.blackText}>مہارت</Text>
+                <Text>Name</Text>
+                <Text style={styles.blackText}>{item.name}</Text>
               </View>
 
               <View style={styles.row}>
-                <Text>تجربہ </Text>
-                <Text style={styles.blackText}>تجربہ</Text>
+                <Text>Age</Text>
+                <Text style={styles.blackText}>{item.age}</Text>
+              </View>
+
+              <View>
+                <View style={styles.row}>
+                  <Text>Like</Text>
+                  <Text style={styles.blackText}>{item.like}</Text>
+                </View>
+
+                <View style={styles.row}>
+                  <Text>Skill</Text>
+                  <Text style={styles.blackText}>{item.skill}</Text>
+                </View>
               </View>
             </View>
 
             <View>
               <View style={styles.row}>
-                <Text>نام</Text>
-                <Text style={styles.blackText}>نام</Text>
+                <Text>Location</Text>
+                <Text style={styles.blackText}>{item.location}</Text>
               </View>
 
               <View style={styles.row}>
-                <Text>عمر</Text>
-                <Text style={styles.blackText}>عمر</Text>
+                <Text>Experience</Text>
+                <Text style={styles.blackText}>{item.exprience}</Text>
+              </View>
+
+              <View style={styles.row}>
+                <Text>Images</Text>
+                <Text style={styles.blackText}>{item.images}</Text>
+              </View>
+
+              <View style={styles.row}>
+                <Text>View</Text>
+                <Text style={styles.blackText}>{item.view}</Text>
               </View>
             </View>
           </View>
-
-          {/* <Rating
-                        imageSize={20}
-                        onFinishRating={this.ratingCompleted}
-                        style={{ paddingVertical: 1 }}
-                        /> */}
 
           <TouchableOpacity
             onPress={() => this.props.navigation.navigate('ViewImages')}>
@@ -190,6 +179,7 @@ class Home extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
+
         <View style={styles.bottomBtn}>
           <Text style={styles.whiteText}>CALL NOW</Text>
           <View style={styles.line} />
@@ -217,7 +207,7 @@ class Home extends React.Component {
         <FlatList
           showsVerticalScrollIndicator={false}
           style={styles.FlatListStyles}
-          data={this.state.data}
+          data={this.state.shedData}
           renderItem={this.renderItem}
           keyExtractor={(key, index) => index.toString()}
         />
