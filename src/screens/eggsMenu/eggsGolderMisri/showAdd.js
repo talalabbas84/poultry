@@ -55,8 +55,36 @@ class Home extends React.Component {
     });
 
     this.getData();
+    this.readData();
   }
-
+  favHandler = async (id) => {
+    const body = JSON.stringify({
+      user_id: await AsyncStorage.getItem('user_id'),
+      category_id: 4,
+      sub_cateogory_id: 2,
+      subCategory: 2,
+      post_id: id,
+      favorite: '1',
+    });
+    // alert('dsads');
+    axios({
+      method: 'post',
+      url: 'https://www.pakpoultryhub.com/api/favorite.php',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        console.log(response.data);
+        alert('Post has been favorited');
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
+  };
   getCityName = (city_id) => {
     // alert('hi');
     let city_name = '';
@@ -155,13 +183,24 @@ class Home extends React.Component {
         <View
           // onPress={()=> this.props.navigation.navigate(item.route)}
           style={styles.touchcard}>
-          <View style={styles.likeView}>
-            <Text style={styles.text}>{item.title}</Text>
-            <TouchableOpacity onPress={() => this.changeLikeIcon(index)}>
-              <Image style={styles.image} source={item.like ? like : unlike} />
-            </TouchableOpacity>
-          </View>
-
+          {this.state.token !== '' && (
+            <View style={styles.likeView}>
+              <Text style={styles.text}>{item.title}</Text>
+              <TouchableOpacity onPress={() => this.favHandler(item.id)}>
+                <Image
+                  style={styles.image}
+                  source={item.like ? like : unlike}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+          {/* {this.state.token !== '' && (
+            <React.Fragment>
+              <TouchableOpacity style={styles.likeView}>
+                <Image style={styles.image} source={like} />
+              </TouchableOpacity>
+            </React.Fragment>
+          )} */}
           <View style={styles.row}>
             <View>
               <View style={styles.row}>

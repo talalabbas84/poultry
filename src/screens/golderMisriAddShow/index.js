@@ -57,8 +57,8 @@ class Home extends React.Component {
       const from = this.props.route.params.from;
       this.setState({header: from});
     }
-    // this.getData();
-    // this.readData();
+    this.getData();
+    this.readData();
   }
 
   readData = async () => {
@@ -97,6 +97,32 @@ class Home extends React.Component {
     } catch (err) {
       // alert(err.message);
     }
+  };
+  favHandler = async (id) => {
+    const body = JSON.stringify({
+      user_id: await AsyncStorage.getItem('user_id'),
+      category_id: 2,
+      post_id: id,
+      favorite: '1',
+    });
+    // alert('dsads');
+    axios({
+      method: 'post',
+      url: 'https://www.pakpoultryhub.com/api/favorite.php',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        console.log(response.data);
+        alert('Post has been favorited');
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
   };
 
   getCityName = (city_id) => {
@@ -218,8 +244,14 @@ class Home extends React.Component {
             />
           </View>
 
-          <View style={styles.line} />
-          <Image style={styles.image} source={like} />
+          {this.state.token !== '' && (
+            <React.Fragment>
+              <View style={styles.line} />
+              <TouchableOpacity onPress={() => this.favHandler(item.id)}>
+                <Image style={styles.image} source={like} />
+              </TouchableOpacity>
+            </React.Fragment>
+          )}
         </View>
       </Card>
     );

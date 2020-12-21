@@ -27,6 +27,7 @@ import {
 import AppStyles from '../../styles';
 import Button from '../../components/button';
 import {Rating, AirbnbRating} from 'react-native-ratings';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
@@ -35,10 +36,12 @@ class Home extends React.Component {
     shedData: [],
     city: [],
     type: this.props.route.params.type,
+    token: '',
   };
 
   componentDidMount() {
     this.props.navigation.addListener('focus', () => {
+      this.readData();
       this.setState({
         ...this.state,
         type: this.props.route.params.type,
@@ -50,6 +53,7 @@ class Home extends React.Component {
       this.setState({header: from});
     }
     this.getData();
+    this.readData();
   }
 
   getData = async () => {
@@ -83,6 +87,52 @@ class Home extends React.Component {
     return city_name;
   };
 
+  favHandler = async (id) => {
+    const body = JSON.stringify({
+      user_id: await AsyncStorage.getItem('user_id'),
+      category_id: 5,
+      // sub_cateogory_id: 2,
+      // subCategory: 2,
+      post_id: id,
+      favorite: '1',
+    });
+    // alert('dsads');
+    axios({
+      method: 'post',
+      url: 'https://www.pakpoultryhub.com/api/favorite.php',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        console.log(response.data);
+        alert('Post has been favorited');
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
+  };
+
+  readData = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      // alert(token);
+      if (token) {
+        this.setState({
+          token: token,
+        });
+      } else {
+        this.setState({
+          token: '',
+        });
+      }
+
+      return token;
+    } catch (e) {}
+  };
   ratingCompleted(rating) {
     console.log('Rating is: ' + rating);
   }
@@ -108,15 +158,17 @@ class Home extends React.Component {
         <View
           // onPress={()=> this.props.navigation.navigate(item.route)}
           style={styles.touchcard}>
-          <View style={styles.likeView}>
-            <Text style={styles.text}>{item.title}</Text>
-            <TouchableOpacity>
-              <Image
-                style={styles.image}
-                source={item.like ? fav : favourite}
-              />
-            </TouchableOpacity>
-          </View>
+          {/* {this.state.token !== '' && (
+            <View style={styles.likeView}>
+              <Text style={styles.text}>{item.title}</Text>
+              <TouchableOpacity onPress={() => this.favHandler(item.id)}>
+                <Image
+                  style={styles.image}
+                  source={item.like ? like : unlike}
+                />
+              </TouchableOpacity>
+            </View>
+          )} */}
 
           <View style={styles.row}>
             <View>
@@ -188,9 +240,14 @@ class Home extends React.Component {
               source={cursor}
             />
           </View>
-
-          <View style={styles.line} />
-          <Image style={styles.image} source={like} />
+          {this.state.token !== '' && (
+            <React.Fragment>
+              <View style={styles.line} />
+              <TouchableOpacity onPress={() => this.favHandler(item.id)}>
+                <Image style={styles.image} source={like} />
+              </TouchableOpacity>
+            </React.Fragment>
+          )}
         </View>
       </Card>
     );
@@ -209,16 +266,17 @@ class Home extends React.Component {
           renderItem={this.renderItem}
           keyExtractor={(key, index) => index.toString()}
         />
-
-        <TouchableOpacity
-          onPress={() =>
-            this.props.navigation.navigate('createAdForShed', {
-              from,
-            })
-          }
-          style={styles.btn}>
-          <Text style={styles.title}>CREATE NEW POST</Text>
-        </TouchableOpacity>
+        {this.state.token !== '' && (
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate('createAdForShed', {
+                from,
+              })
+            }
+            style={styles.btn}>
+            <Text style={styles.title}>CREATE NEW POST</Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   }

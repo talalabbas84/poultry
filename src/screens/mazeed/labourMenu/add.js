@@ -27,6 +27,7 @@ import {
 import AppStyles from '../../../styles';
 import Button from '../../../components/button';
 import {Rating, AirbnbRating} from 'react-native-ratings';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
@@ -35,6 +36,7 @@ class Home extends React.Component {
     shedData: [],
     city: [],
     type: this.props.route.params.type,
+    token: '',
   };
 
   componentDidMount() {
@@ -44,12 +46,14 @@ class Home extends React.Component {
         type: this.props.route.params.type,
       });
       this.getData();
+      this.readData();
     });
     if (this.props.route.params) {
       const from = this.props.route.params.from;
       this.setState({header: from});
     }
     this.getData();
+    this.readData();
   }
 
   getData = async () => {
@@ -70,6 +74,52 @@ class Home extends React.Component {
     }
   };
 
+  favHandler = async (id) => {
+    const body = JSON.stringify({
+      user_id: await AsyncStorage.getItem('user_id'),
+      category_id: 6,
+      // sub_cateogory_id: 2,
+      // subCategory: 2,
+      post_id: id,
+      favorite: '1',
+    });
+    // alert('dsads');
+    axios({
+      method: 'post',
+      url: 'https://www.pakpoultryhub.com/api/favorite.php',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        console.log(response.data);
+        alert('Post has been favorited');
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
+  };
+
+  readData = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      // alert(token);
+      if (token) {
+        this.setState({
+          token: token,
+        });
+      } else {
+        this.setState({
+          token: '',
+        });
+      }
+
+      return token;
+    } catch (e) {}
+  };
   getCityName = (city_id) => {
     // alert('hi');
     let city_name = '';
@@ -188,9 +238,14 @@ class Home extends React.Component {
               source={cursor}
             />
           </View>
-
-          <View style={styles.line} />
-          <Image style={styles.image} source={like} />
+          {this.state.token !== '' && (
+            <React.Fragment>
+              <View style={styles.line} />
+              <TouchableOpacity onPress={() => this.favHandler(item.id)}>
+                <Image style={styles.image} source={like} />
+              </TouchableOpacity>
+            </React.Fragment>
+          )}
         </View>
       </Card>
     );
@@ -210,15 +265,17 @@ class Home extends React.Component {
           keyExtractor={(key, index) => index.toString()}
         />
 
-        <TouchableOpacity
-          onPress={() =>
-            this.props.navigation.navigate('createAddForLabour', {
-              from,
-            })
-          }
-          style={styles.btn}>
-          <Text style={styles.title}>CREATE NEW POST</Text>
-        </TouchableOpacity>
+        {this.state.token !== '' && (
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate('createAddForLabour', {
+                from,
+              })
+            }
+            style={styles.btn}>
+            <Text style={styles.title}>CREATE NEW POST</Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   }

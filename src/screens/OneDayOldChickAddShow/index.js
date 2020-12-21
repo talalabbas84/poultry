@@ -54,6 +54,7 @@ class Home extends React.Component {
       this.setState({header: from});
     }
     this.getData();
+    this.readData();
   }
   readData = async () => {
     // this.readData();
@@ -122,6 +123,33 @@ class Home extends React.Component {
   //     {title: 'AD # 3', image: chick, like: false},
   //   ],
   // };
+  favHandler = async (id) => {
+    const body = JSON.stringify({
+      user_id: await AsyncStorage.getItem('user_id'),
+      category_id: 3,
+      subCategory: this.props.route.params.subCategory,
+      post_id: id,
+      favorite: '1',
+    });
+    // alert('dsads');
+    axios({
+      method: 'post',
+      url: 'https://www.pakpoultryhub.com/api/favorite.php',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        console.log(response.data);
+        alert('Post has been favorited');
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
+  };
 
   changeLikeIcon = (index) => {
     //alert(index)
@@ -213,8 +241,14 @@ class Home extends React.Component {
             />
           </View>
 
-          <View style={styles.line} />
-          <Image style={styles.image} source={like} />
+          {this.state.token !== '' && (
+            <React.Fragment>
+              <View style={styles.line} />
+              <TouchableOpacity onPress={() => this.favHandler(item.id)}>
+                <Image style={styles.image} source={like} />
+              </TouchableOpacity>
+            </React.Fragment>
+          )}
         </View>
       </Card>
     );

@@ -55,6 +55,7 @@ class Home extends React.Component {
     });
 
     this.getData();
+    this.readData();
   }
 
   getCityName = (city_id) => {
@@ -104,7 +105,7 @@ class Home extends React.Component {
   readData = async () => {
     try {
       const token = await AsyncStorage.getItem('token');
-      alert(token);
+      // alert(token);
       if (token) {
         this.setState({
           token: token,
@@ -131,6 +132,34 @@ class Home extends React.Component {
   ratingCompleted(rating) {
     console.log('Rating is: ' + rating);
   }
+  favHandler = async (id) => {
+    const body = JSON.stringify({
+      user_id: await AsyncStorage.getItem('user_id'),
+      category_id: 4,
+      sub_cateogory_id: 1,
+      subCategory: 1,
+      post_id: id,
+      favorite: '1',
+    });
+    // alert('dsads');
+    axios({
+      method: 'post',
+      url: 'https://www.pakpoultryhub.com/api/favorite.php',
+      data: body,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(async (response) => {
+        console.log(response.data);
+        alert('Post has been favorited');
+      })
+      .catch(function (response) {
+        //handle error
+        // alert('User already exists');
+        console.log(response);
+      });
+  };
 
   changeLikeIcon = (index) => {
     //alert(index)
@@ -157,9 +186,13 @@ class Home extends React.Component {
           style={styles.touchcard}>
           <View style={styles.likeView}>
             <Text style={styles.text}>{item.title}</Text>
-            <TouchableOpacity onPress={() => this.changeLikeIcon(index)}>
-              <Image style={styles.image} source={item.like ? like : unlike} />
-            </TouchableOpacity>
+            {this.state.token !== '' && (
+              <React.Fragment>
+                <TouchableOpacity onPress={() => this.favHandler(item.id)}>
+                  <Image style={styles.image} source={like} />
+                </TouchableOpacity>
+              </React.Fragment>
+            )}
           </View>
 
           <View style={styles.row}>

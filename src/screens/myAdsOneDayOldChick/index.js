@@ -69,6 +69,7 @@ class Home extends React.Component {
     //   this.getData();
     // });
     this.getData();
+    // this.readData();
   }
 
   componentDidUpdate(prevProps, prevState) {
