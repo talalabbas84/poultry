@@ -62,8 +62,6 @@ class Home extends React.Component {
       );
       // console.log(res.data);
 
-      console.log(res.data);
-
       this.setState({...this.setState, shedData: res.data});
       this.setState({...this.setState, city: res2.data});
       // alert('success');

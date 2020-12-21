@@ -8,6 +8,8 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
+import AppStyles from '../../../appStyles/styles';
+
 import Header from '../../../components/header';
 import CustomTextInput from '../../../components/textInput';
 import colors from '../../../constants/colors';
@@ -24,6 +26,7 @@ import {
   marker,
   camera,
 } from '../../../constants/images';
+import {Card} from 'native-base';
 
 class Create extends React.Component {
   state = {
@@ -86,22 +89,24 @@ class Create extends React.Component {
   createPost = () => {
     const body = JSON.stringify({
       user_id: this.state.user_id,
-      category_id: this.state.category_id,
+      category_id: 6,
       city_id: this.state.city_id ? this.state.city_id : this.state.city[0].id,
       age: this.state.age,
       skill: this.state.skill,
       exprience: this.state.exprience,
       phone_no: this.state.phone_no,
       location: this.state.location,
-      like: this.state.like,
-      view: this.state.view,
+      like: 'werwerw',
+      view: 'erewr',
       date: this.state.date,
-      images: this.state.images,
+      images: 'erwerwe',
     });
+
     // alert('dsads');
+    console.log(body);
     axios({
       method: 'post',
-      url: 'https://www.pakpoultryhub.com/api/boiler_post.php',
+      url: 'https://www.pakpoultryhub.com/api/men_power_post.php',
       data: body,
       headers: {
         'Content-Type': 'application/json',
@@ -110,21 +115,20 @@ class Create extends React.Component {
       .then(async (response) => {
         this.setState({
           ...this.state,
-          weight: null,
-          type: null,
-          rate: null,
+          skill: null,
+          exprience: null,
+          age: null,
           less_on_cash: '',
           address: '',
           phone_no: '',
           location: '',
         });
         alert('Post added Successfully');
-        this.props.navigation.navigate('Available');
+        this.props.navigation.navigate('AddForLabour');
       })
       .catch(function (response) {
         //handle error
         // alert('User already exists');
-        console.log(response);
       });
 
     // all varaiables are here, just trim the date
@@ -141,7 +145,7 @@ class Create extends React.Component {
       showPhone,
       showGrade,
     } = this.state;
-    return (
+    return this.state.city && this.state.city.length > 0 ? (
       <View>
         <ScrollView>
           <Header back navigation={this.props.navigation} title="CREATE POST" />
@@ -182,6 +186,22 @@ class Create extends React.Component {
             </View>
           )}
 
+          <View>
+            <Text style={styles.text}>شہر درج کریں</Text>
+            <Card style={AppStyles.pickerBack}>
+              <Picker
+                selectedValue={this.state.city_id}
+                style={AppStyles.picker}
+                onValueChange={(itemValue, itemIndex) =>
+                  this.setState({...this.state, city_id: itemValue})
+                }>
+                {this.state.city.map((city) => (
+                  <Picker.Item label={city.city_name} value={city.id} />
+                ))}
+              </Picker>
+            </Card>
+          </View>
+
           {showPhone && (
             <View>
               <Text style={styles.text}>فون نمبر درج کریں</Text>
@@ -201,6 +221,7 @@ class Create extends React.Component {
             <View>
               <Text style={styles.text}>عمر درج کریں</Text>
               <CustomTextInput
+                keyboardType="numeric"
                 image={circle}
                 placeholder="عمر درج کریں"
                 value={this.state.age}
@@ -209,10 +230,37 @@ class Create extends React.Component {
             </View>
           )}
 
+          {showGrade && (
+            <View>
+              <Text style={styles.text}>عمر درج کریں</Text>
+              <CustomTextInput
+                image={circle}
+                placeholder="location"
+                value={this.state.location}
+                onChangeText={(e) =>
+                  this.setState({...this.state, location: e})
+                }
+              />
+            </View>
+          )}
+
+          {showGrade && (
+            <View>
+              <Text style={styles.text}>type</Text>
+              <CustomTextInput
+                keyboardType="numeric"
+                image={circle}
+                placeholder="عمر درج کریں"
+                value={this.state.type}
+                onChangeText={(e) => this.setState({...this.state, type: e})}
+              />
+            </View>
+          )}
+
           <Button red title="پوسٹ" onPress={this.createPost} />
         </ScrollView>
       </View>
-    );
+    ) : null;
   }
 }
 
