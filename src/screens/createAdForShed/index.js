@@ -101,7 +101,7 @@ class Create extends React.Component {
       rent: this.state.rent,
       price: this.state.price,
       capacity: this.state.capacity,
-      type: '2',
+      type: this.state.type,
       phone_no: this.state.number,
       location: this.state.location,
       like: 'asdad',
@@ -109,8 +109,6 @@ class Create extends React.Component {
       date: this.state.date,
       images: 'm2.jpg',
     });
-
-    console.log(body);
     // alert('dsads');
     axios({
       method: 'post',
@@ -138,7 +136,6 @@ class Create extends React.Component {
       .catch(function (response) {
         //handle error
         // alert('User already exists');
-        console.log(response);
       });
 
     // all varaiables are here, just trim the date
@@ -180,7 +177,6 @@ class Create extends React.Component {
               />
             </View>
           )}
-
           {showLess && (
             <View>
               <Text style={styles.text}>Price</Text>
@@ -192,7 +188,6 @@ class Create extends React.Component {
               />
             </View>
           )}
-
           {showLess && (
             <View>
               <Text style={styles.text}>Rent</Text>
@@ -204,7 +199,6 @@ class Create extends React.Component {
               />
             </View>
           )}
-
           <View>
             <Text style={styles.text}>
               ریٹ شہر مارکیٹ کے مطابق خود درج کریں
@@ -223,18 +217,15 @@ class Create extends React.Component {
             </Card>
           </View>
 
-          {showPhone && (
-            <View>
-              <Text style={styles.text}>فون نمبر درج کریں</Text>
-              <CustomTextInput
-                keyboardType="numeric"
-                image={phone}
-                onChangeText={(e) => this.setState({...this.state, number: e})}
-                placeholder="eg.03xxxxxxx"
-                value={this.state.number}
-              />
-            </View>
-          )}
+          <View>
+            <Text style={styles.text}>Type </Text>
+            <CustomTextInput
+              keyboardType="numeric"
+              onChangeText={(e) => this.setState({...this.state, type: e})}
+              placeholder="type"
+              value={this.state.type}
+            />
+          </View>
 
           {showPhone && (
             <View>
@@ -247,11 +238,9 @@ class Create extends React.Component {
               />
             </View>
           )}
-
           <Text style={[styles.text, {alignSelf: 'center', fontSize: 12}]}>
             your post will be deleted automatically after 24 hours
           </Text>
-
           <Button red title="پوسٹ" onPress={() => this.createPost()} />
         </ScrollView>
       </View>

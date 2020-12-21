@@ -124,6 +124,7 @@ class Home extends React.Component {
     date,
     phone_no,
     city_id,
+    type,
   ) => {
     this.props.navigation.navigate('EditAdShed', {
       id,
@@ -136,6 +137,7 @@ class Home extends React.Component {
       date,
       phone_no,
       city_id,
+      type,
     });
   };
 
@@ -189,16 +191,6 @@ class Home extends React.Component {
 
             <View>
               <View style={styles.row}>
-                <Text>Phone</Text>
-                <Text style={styles.blackText}>{item.phone_no}</Text>
-              </View>
-
-              <View style={styles.row}>
-                <Text>Description</Text>
-                <Text style={styles.blackText}>{item.description}</Text>
-              </View>
-
-              <View style={styles.row}>
                 <Text>Date </Text>
                 <Text style={styles.blackText}>{item.date}</Text>
               </View>
@@ -222,15 +214,14 @@ class Home extends React.Component {
             onPress={() => {
               this.navigateToEdit(
                 item.id,
-
                 item.rent,
                 item.price,
                 item.capacity,
-
                 item.location,
                 item.date,
                 item.phone_no,
                 item.city_id,
+                item.type,
               );
             }}>
             <Text style={styles.redtext}>EDIT </Text>
