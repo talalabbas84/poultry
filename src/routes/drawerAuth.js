@@ -42,6 +42,10 @@ import EggRates from '../screens/rateMenu/eggRate';
 import HowTouser from '../screens/howtoUse';
 
 import createAdForOneDayOldChick from '../screens/eggsMenu/oneDayOldChick/createAdForOneDayOldChick';
+import createAdForShed from '../screens/createAdForShed';
+
+import EditAdManpower from '../screens/EditAdManpower';
+import EditAdShed from '../screens/EditAdShed';
 
 import editAdBroiler from '../screens/editAdBroiler';
 import editAdEgg from '../screens/editAdEgg';
@@ -49,8 +53,12 @@ import editAdOneDatOldChick from '../screens/editAdOneDayOldChick';
 
 import EditAdGoldenMisri from '../screens/editAdGoldenMisri';
 
+import shedAddShow from '../screens/shedAddShow';
+
 import myAds from '../screens/myAds';
 import myAdsGoldenMisri from '../screens/myAdsGoldenMishri/';
+import myAdsManpower from '../screens/myAdsManpower/';
+import myAdsShed from '../screens/myAdsShed';
 import myAdEgg from '../screens/myAdsEgg';
 import myAdsOneDayOldChick from '../screens/myAdsOneDayOldChick';
 import OneDayOldChickShowAdd from '../screens/OneDayOldChickAddShow';
@@ -71,8 +79,15 @@ const DrawerStack = () => {
         component={editAdOneDatOldChick}
       />
 
+      <Stack.Screen name="shedAddShow" component={shedAddShow} />
+      <Stack.Screen name="EditAdShed" component={EditAdShed} />
+
+      <Stack.Screen name="EditAdManpower" component={EditAdManpower} />
+      <Stack.Screen name="myAdsManpower" component={myAdsManpower} />
       <Stack.Screen name="myAdsGoldenMisri" component={myAdsGoldenMisri} />
       <Stack.Screen name="myAdEgg" component={myAdEgg} />
+      <Stack.Screen name="myAdsShed" component={myAdsShed} />
+
       <Stack.Screen name="myAds" component={myAds} />
       <Stack.Screen
         name="myAdsOneDayOldChick"
@@ -108,6 +123,9 @@ const DrawerStack = () => {
       />
 
       <Stack.Screen name="EggsLayerAdd" component={EggsLayerAdd} />
+
+      <Stack.Screen name="createAdForShed" component={createAdForShed} />
+
       <Stack.Screen
         name="CreateAddForEggLayer"
         component={CreateAddForEggLayer}

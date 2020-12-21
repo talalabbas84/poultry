@@ -33,7 +33,7 @@ class Home extends React.Component {
         title1: 'SHED',
         title: 'شیڈ',
         image: shed,
-        route: 'AddForLabour',
+        route: 'shedAddShow',
         type: '1',
       },
       {
