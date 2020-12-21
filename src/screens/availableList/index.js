@@ -25,6 +25,7 @@ import {
 import AppStyles from '../../styles';
 import Button from '../../components/button';
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
@@ -35,11 +36,13 @@ class Home extends React.Component {
     header: '',
     broilerData: [],
     city: [],
+    token: '',
   };
 
   componentDidMount() {
     this.props.navigation.addListener('focus', () => {
       this.getData();
+      this.readData();
     });
     if (this.props.route.params) {
       const from = this.props.route.params.from;
@@ -88,6 +91,25 @@ class Home extends React.Component {
   //   ],
   // };
 
+  readData = async () => {
+    // this.readData();
+    try {
+      const token = await AsyncStorage.getItem('token');
+      // alert(token);
+      if (token) {
+        this.setState({
+          token: token,
+        });
+      } else {
+        this.setState({
+          token: '',
+        });
+      }
+      // alert(token);
+
+      return token;
+    } catch (e) {}
+  };
   changeLikeIcon = (index) => {
     //alert(index)
     let {data} = this.state;
@@ -196,16 +218,17 @@ class Home extends React.Component {
           renderItem={this.renderItem}
           keyExtractor={(key, index) => index.toString()}
         />
-
-        <TouchableOpacity
-          onPress={() =>
-            this.props.navigation.navigate('CreateAddForBroiler', {
-              from,
-            })
-          }
-          style={styles.btn}>
-          <Text style={styles.title}>CREATE NEW POST</Text>
-        </TouchableOpacity>
+        {this.state.token !== '' && (
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate('CreateAddForBroiler', {
+                from,
+              })
+            }
+            style={styles.btn}>
+            <Text style={styles.title}>CREATE NEW POST</Text>
+          </TouchableOpacity>
+        )}
       </View>
     ) : null;
   }

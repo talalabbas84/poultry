@@ -25,6 +25,7 @@ import {
 import AppStyles from '../../styles';
 import Button from '../../components/button';
 import axios from 'axios';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const HEIGHT = Dimensions.get('window').height;
 const WIDTH = Dimensions.get('window').width;
@@ -35,11 +36,13 @@ class Home extends React.Component {
     header: '',
     odocData: [],
     city: [],
+    token: '',
     subCategory: this.props.route.params.subCategory,
   };
 
   componentDidMount() {
     this.props.navigation.addListener('focus', () => {
+      this.readData();
       this.setState({
         ...this.state,
         subCategory: this.props.route.params.subCategory,
@@ -52,7 +55,26 @@ class Home extends React.Component {
     }
     this.getData();
   }
+  readData = async () => {
+    // this.readData();
 
+    try {
+      const token = await AsyncStorage.getItem('token');
+      // alert(token);
+      if (token) {
+        this.setState({
+          token: token,
+        });
+      } else {
+        this.setState({
+          token: '',
+        });
+      }
+      // alert(token);
+
+      return token;
+    } catch (e) {}
+  };
   getData = async () => {
     // alert('ds');
     try {
@@ -217,17 +239,18 @@ class Home extends React.Component {
           renderItem={this.renderItem}
           keyExtractor={(key, index) => index.toString()}
         />
-
-        <TouchableOpacity
-          onPress={() =>
-            this.props.navigation.navigate('createAdForOneDayOldChick', {
-              from,
-              subCategory: this.state.subCategory,
-            })
-          }
-          style={styles.btn}>
-          <Text style={styles.title}>CREATE NEW POST</Text>
-        </TouchableOpacity>
+        {this.state.token !== '' && (
+          <TouchableOpacity
+            onPress={() =>
+              this.props.navigation.navigate('createAdForOneDayOldChick', {
+                from,
+                subCategory: this.state.subCategory,
+              })
+            }
+            style={styles.btn}>
+            <Text style={styles.title}>CREATE NEW POST</Text>
+          </TouchableOpacity>
+        )}
       </View>
     ) : null;
   }

@@ -10,14 +10,52 @@ import {
 import colors from '../../constants/colors';
 import AppStyle from '../../styles';
 import {profile} from '../../constants/images';
+import AsyncStorage from '@react-native-community/async-storage';
 
 class Drawer extends React.Component {
   state = {
     count: 0,
+    token: '',
   };
   routeTo = (path) => {
     this.props.navigation.closeDrawer();
     this.props.navigation.navigate(path);
+  };
+  componentDidMount() {
+    this.props.navigation.addListener('focus', () => {
+      this.readData();
+    });
+  }
+  readData = async () => {
+    // this.readData();
+    try {
+      const token = await AsyncStorage.getItem('token');
+      // alert(token);
+      if (token) {
+        this.setState({
+          token: token,
+        });
+      } else {
+        this.setState({
+          token: '',
+        });
+      }
+      // alert(token);
+
+      return token;
+    } catch (e) {}
+  };
+
+  logoutHandler = async () => {
+    // alert('ds');
+    await AsyncStorage.clear();
+    this.setState({
+      token: '',
+    });
+    // alert('ds');
+    // setTimeout(() => {
+    this.props.navigation.navigate('Home');
+    // }, 20000);
   };
   render() {
     return (
@@ -35,21 +73,26 @@ class Drawer extends React.Component {
           style={styles.row}>
           <Text style={AppStyle.mediumBold}>HOME</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => this.routeTo('allAds')}
-          style={styles.row}>
-          <Text style={AppStyle.mediumBold}>MY ADS</Text>
-        </TouchableOpacity>
+        {this.state.token !== '' && (
+          <TouchableOpacity
+            onPress={() => this.routeTo('allAds')}
+            style={styles.row}>
+            <Text style={AppStyle.mediumBold}>MY ADS</Text>
+          </TouchableOpacity>
+        )}
+
         {/* <TouchableOpacity 
                       onPress={()=> this.routeTo('CreatePost')}
                     style={styles.row}>
                     <Text style={AppStyle.mediumBold}>CREATE POST</Text>
                 </TouchableOpacity> */}
-        <TouchableOpacity
-          onPress={() => this.routeTo('Favourites')}
-          style={styles.row}>
-          <Text style={AppStyle.mediumBold}>FAVOURITES</Text>
-        </TouchableOpacity>
+        {this.state.token !== '' && (
+          <TouchableOpacity
+            onPress={() => this.routeTo('Favourites')}
+            style={styles.row}>
+            <Text style={AppStyle.mediumBold}>FAVOURITES</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           onPress={() => this.routeTo('HowTouser')}
           style={styles.row}>
@@ -66,11 +109,21 @@ class Drawer extends React.Component {
                     style={styles.row}>
                     <Text style={AppStyle.mediumBold}>Available</Text>
                 </TouchableOpacity> */}
-        <TouchableOpacity
-          onPress={() => this.routeTo('Welcom')}
-          style={styles.row}>
-          <Text style={AppStyle.mediumBold}>LOGOUT</Text>
-        </TouchableOpacity>
+        {this.state.token !== '' ? (
+          <TouchableOpacity
+            onPress={() => this.logoutHandler()}
+            style={styles.row}>
+            <Text style={AppStyle.mediumBold}>LOGOUT</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity
+            onPress={() => this.routeTo('Welcom')}
+            style={styles.row}>
+            <Text onPress={this.login} style={AppStyle.mediumBold}>
+              LOGIN
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   }
